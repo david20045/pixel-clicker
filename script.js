@@ -46,7 +46,7 @@ function buyCard(type) {
 setInterval(function() {
     coins += profitPerHour / 60; // Прибыль каждую минуту
     updateCoinsDisplay();
-}, 60000); // Таймер каждые 60 секунд
+}, 1000); // Таймер каждую секунду
 
 // Переключение между экранами
 function showScreen(screenId) {
