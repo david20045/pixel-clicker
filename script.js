@@ -23,13 +23,13 @@ function buyCard(type) {
     
     if (type === 'tree') {
         price = 100;
-        profit = 10;
+        profit = 1000;
     } else if (type === 'stone') {
         price = 200;
-        profit = 20;
+        profit = 2000;
     } else if (type === 'leaf') {
         price = 300;
-        profit = 30;
+        profit = 3000;
     }
 
     if (coins >= price) {
