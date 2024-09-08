@@ -1,6 +1,7 @@
 // Инициализация переменных
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
+let lastUpdate = parseInt(localStorage.getItem('lastUpdate')) || Date.now();
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
@@ -9,6 +10,7 @@ function updateCoinsDisplay() {
     // Сохраняем данные в Local Storage
     localStorage.setItem('coins', coins);
     localStorage.setItem('profitPerHour', profitPerHour);
+    localStorage.setItem('lastUpdate', lastUpdate);
 }
 
 // Функция для обработки кликов по кнопке "тап"
@@ -42,11 +44,19 @@ function buyCard(type) {
     }
 }
 
-// Таймер для начисления прибыли в час
-setInterval(function() {
-    coins += profitPerHour / 3600; // Прибыль каждую минуту
+// Расчёт прибыли, основанный на времени с последнего обновления
+function calculateProfit() {
+    const now = Date.now();
+    const elapsed = now - lastUpdate; // Время с последнего обновления в миллисекундах
+    const hoursElapsed = elapsed / (1000 * 60 * 60); // Переводим в часы
+
+    coins += profitPerHour * hoursElapsed; // Начисляем прибыль
+    lastUpdate = now; // Обновляем время последнего обновления
     updateCoinsDisplay();
-}, 1000); // Таймер каждые 60 секунд
+}
+
+// Таймер для начисления прибыли в час
+setInterval(calculateProfit, 60000); // Проверяем каждую минуту
 
 // Переключение между экранами
 function showScreen(screenId) {
@@ -57,4 +67,7 @@ function showScreen(screenId) {
 }
 
 // Инициализация экрана при загрузке
-window.onload = updateCoinsDisplay;
+window.onload = function() {
+    calculateProfit(); // Начисляем прибыль при загрузке
+    updateCoinsDisplay();
+};
