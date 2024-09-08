@@ -56,7 +56,10 @@ function calculateProfit() {
 }
 
 // Таймер для начисления прибыли в час
-setInterval(calculateProfit, 60000); // Проверяем каждую минуту
+setInterval(function() {
+    coins += profitPerHour / 10; // Прибыль каждую минуту
+    updateCoinsDisplay();
+}, 60000); // Таймер каждые 60 секунд
 
 // Переключение между экранами
 function showScreen(screenId) {
