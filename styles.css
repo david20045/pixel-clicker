@@ -56,6 +56,13 @@ body {
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Добавление внутреннего тени для эффекта нажатия */
 }
 
+/* Обеспечим корректное отображение на мобильных устройствах */
+@media (max-width: 768px) {
+  .tap-image {
+    width: 80vw; /* Ширина кнопки на мобильных устройствах */
+  }
+}
+
 .pixel-text {
   font-family: 'Press Start 2P', cursive;
   font-size: 12px;
