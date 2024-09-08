@@ -4,6 +4,8 @@ body {
   color: white;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Предотвращаем прокрутку страницы */
+  touch-action: manipulation; /* Убираем масштабирование и панорамирование */
 }
 
 .game-container {
@@ -47,11 +49,12 @@ body {
   width: 300px; /* Задайте размер изображения */
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease; /* Плавный переход для эффекта нажатия */
+  touch-action: manipulation; /* Предотвращение масштабирования и панорамирования */
 }
 
 .tap-image:active {
   transform: scale(0.9); /* Уменьшение размера при нажатии */
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Добавление внутреннего теня для эффекта нажатия */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Добавление внутреннего тени для эффекта нажатия */
 }
 
 .pixel-text {
