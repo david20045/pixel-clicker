@@ -55,11 +55,13 @@ function buyCard(type) {
 function addCoinsForElapsedTime() {
     const currentTime = Date.now();
     const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время, прошедшее в секундах
-    const wholeSecondsElapsed = Math.floor(timeElapsed); // Округляем до целого количества секунд
 
-    // Рассчитываем прибыль за целые секунды
-    const coinsToAdd = (profitPerHour / 3600) * wholeSecondsElapsed;
-    coins += coinsToAdd;
+    if (timeElapsed > 0) {
+        // Рассчитываем прибыль за каждую секунду, прошедшую с момента выхода
+        const coinsToAdd = (profitPerHour / 3600) * timeElapsed; 
+        coins += coinsToAdd;
+    }
+    
     lastUpdateTime = currentTime; // Обновляем время последнего обновления
     localStorage.setItem('lastUpdateTime', lastUpdateTime);
 }
