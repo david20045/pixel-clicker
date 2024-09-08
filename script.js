@@ -48,18 +48,17 @@ function buyCard(type) {
 function calculateProfit() {
     const now = Date.now();
     const elapsed = now - lastUpdate; // Время с последнего обновления в миллисекундах
-    const hoursElapsed = elapsed / (1000 * 60 * 60); // Переводим в часы
+    const secondsElapsed = Math.floor(elapsed / 1000); // Переводим в секунды
 
-    coins += profitPerHour * hoursElapsed; // Начисляем прибыль
-    lastUpdate = now; // Обновляем время последнего обновления
-    updateCoinsDisplay();
+    if (secondsElapsed > 0) {
+        coins += (profitPerHour / 3600) * secondsElapsed; // Начисляем прибыль
+        lastUpdate = now; // Обновляем время последнего обновления
+        updateCoinsDisplay();
+    }
 }
 
-// Таймер для начисления прибыли в час
-setInterval(function() {
-    coins += profitPerHour / 3600; // Прибыль каждую минуту
-    updateCoinsDisplay();
-}, 1000); // Таймер каждые 60 секунд
+// Таймер для начисления прибыли каждую секунду
+setInterval(calculateProfit, 1000); // Проверяем каждую секунду
 
 // Переключение между экранами
 function showScreen(screenId) {
