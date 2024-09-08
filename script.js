@@ -1,6 +1,7 @@
 // Инициализация переменных
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
+let lastUpdateTime = localStorage.getItem('lastUpdateTime') || Date.now();
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
@@ -50,6 +51,16 @@ function buyCard(type) {
     }
 }
 
+// Функция для начисления монет за прошедшее время, пока игрок отсутствовал
+function addCoinsForElapsedTime() {
+    const currentTime = Date.now();
+    const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время, прошедшее с момента последнего обновления в секундах
+    const coinsToAdd = (profitPerHour / 3600) * timeElapsed; // Рассчитываем, сколько монет добавить за прошедшее время
+    coins += coinsToAdd;
+    lastUpdateTime = currentTime;
+    localStorage.setItem('lastUpdateTime', lastUpdateTime);
+}
+
 // Таймер для начисления прибыли каждую секунду
 setInterval(function() {
     coins += profitPerHour / 3600; // Прибыль каждую секунду на основе прибыли в час
@@ -65,4 +76,12 @@ function showScreen(screenId) {
 }
 
 // Инициализация экрана при загрузке
-window.onload = updateCoinsDisplay;
+window.onload = function() {
+    addCoinsForElapsedTime(); // Начисляем монеты за время, пока игрок отсутствовал
+    updateCoinsDisplay();
+}
+
+// Сохранение времени последнего обновления перед закрытием/перезагрузкой
+window.onbeforeunload = function() {
+    localStorage.setItem('lastUpdateTime', Date.now());
+};
