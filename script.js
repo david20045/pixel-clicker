@@ -1,15 +1,14 @@
-let coins = 0;
-let profitPerHour = 0;
-
-function tap() {
-    coins += 2; // 2 монеты за каждый тап
-    updateCoinsDisplay();
-}
+// Инициализация переменных
+let coins = parseInt(localStorage.getItem('coins')) || 0;
+let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
     document.getElementById('coins').textContent = `Монеты: ${coins}`;
     document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
+    // Сохраняем данные в Local Storage
+    localStorage.setItem('coins', coins);
+    localStorage.setItem('profitPerHour', profitPerHour);
 }
 
 // Функция покупки карточек
@@ -18,13 +17,13 @@ function buyCard(type) {
     
     if (type === 'tree') {
         price = 100;
-        profit = 1000;
+        profit = 10;
     } else if (type === 'stone') {
         price = 200;
-        profit = 2000;
+        profit = 20;
     } else if (type === 'leaf') {
         price = 300;
-        profit = 3000;
+        profit = 30;
     }
 
     if (coins >= price) {
@@ -39,9 +38,9 @@ function buyCard(type) {
 
 // Таймер для начисления прибыли в час
 setInterval(function() {
-    coins += profitPerHour / 3600; // Прибыль каждую минуту
+    coins += profitPerHour / 10; // Прибыль каждую минуту
     updateCoinsDisplay();
-}, 1000); // Таймер каждые 60 секунд
+}, 60000); // Таймер каждые 60 секунд
 
 // Переключение между экранами
 function showScreen(screenId) {
@@ -50,3 +49,6 @@ function showScreen(screenId) {
     });
     document.getElementById(screenId).classList.add('active');
 }
+
+// Инициализация экрана при загрузке
+window.onload = updateCoinsDisplay;
