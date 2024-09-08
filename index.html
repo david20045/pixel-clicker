@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Clicker Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Экран с тапалкой -->
+        <div id="exchange" class="screen active">
+            <div class="tap-container">
+                <h1 class="pixel-text">Биржа</h1>
+                <div class="tap-info">
+                    <img src="https://imageup.ru/img181/4909204/new-piskel-1.png" class="pixel-coin" alt="Coin">
+                    <span id="coins" class="pixel-text">Монеты: 0</span>
+                </div>
+                <div class="tap-button-container">
+                    <img src="https://imageup.ru/img181/4909204/new-piskel-1.png" class="tap-image" alt="Tap Button" onclick="tap()"> <!-- Просто изображение, которое вы добавите -->
+                </div>
+                <span id="profit-per-hour" class="pixel-text">Прибыль в час: 0</span> <!-- Надпись с прибылью в час -->
+            </div>
+        </div>
+
+        <!-- Магазин с карточками -->
+        <div id="shop" class="screen">
+            <h1 class="pixel-text">Магазин</h1>
+            <div class="cards-container">
+                <div class="card" onclick="buyCard('tree')">
+                    <img src="tree_pixel.png" alt="Tree">
+                    <p class="pixel-text">Дерево - 100 монет (прибыль: +10/час)</p>
+                </div>
+                <div class="card" onclick="buyCard('stone')">
+                    <img src="stone_pixel.png" alt="Stone">
+                    <p class="pixel-text">Камень - 200 монет (прибыль: +20/час)</p>
+                </div>
+                <div class="card" onclick="buyCard('leaf')">
+                    <img src="leaf_pixel.png" alt="Leaf">
+                    <p class="pixel-text">Лист - 300 монет (прибыль: +30/час)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Airdrop (пустая) -->
+        <div id="airdrop" class="screen">
+            <h1 class="pixel-text">Airdrop</h1>
+            <p class="pixel-text">Здесь пока ничего нет.</p>
+        </div>
+
+        <!-- Панель навигации -->
+        <div class="nav-bar">
+            <button onclick="showScreen('exchange')" class="pixel-text">Биржа</button>
+            <button onclick="showScreen('shop')" class="pixel-text">Магазин</button>
+            <button onclick="showScreen('airdrop')" class="pixel-text">Airdrop</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
