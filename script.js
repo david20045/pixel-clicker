@@ -4,11 +4,25 @@ let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
-    document.getElementById('coins').textContent = `Монеты: ${coins}`;
+    document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`; // Округляем количество монет
     document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
     // Сохраняем данные в Local Storage
     localStorage.setItem('coins', coins);
     localStorage.setItem('profitPerHour', profitPerHour);
+}
+
+// Функция нажатия на тапалку
+function tap() {
+    coins += 1; // Увеличиваем количество монет за клик
+    animateTap(); // Анимация при нажатии
+    updateCoinsDisplay();
+}
+
+// Анимация нажатия на тапалку
+function animateTap() {
+    const tapImage = document.querySelector('.tap-image');
+    tapImage.classList.add('tapped');
+    setTimeout(() => tapImage.classList.remove('tapped'), 100); // Сбрасываем анимацию через 100мс
 }
 
 // Функция покупки карточек
@@ -17,13 +31,13 @@ function buyCard(type) {
     
     if (type === 'tree') {
         price = 100;
-        profit = 10;
+        profit = 1000;
     } else if (type === 'stone') {
         price = 200;
-        profit = 20;
+        profit = 2000;
     } else if (type === 'leaf') {
         price = 300;
-        profit = 30;
+        profit = 3000;
     }
 
     if (coins >= price) {
@@ -36,11 +50,11 @@ function buyCard(type) {
     }
 }
 
-// Таймер для начисления прибыли в час
+// Таймер для начисления прибыли каждую секунду
 setInterval(function() {
-    coins += profitPerHour / 10; // Прибыль каждую минуту
+    coins += profitPerHour / 3600; // Прибыль каждую секунду на основе прибыли в час
     updateCoinsDisplay();
-}, 1000); // Таймер каждую секунду
+}, 1000); // Таймер каждые 1 секунду
 
 // Переключение между экранами
 function showScreen(screenId) {
@@ -48,15 +62,6 @@ function showScreen(screenId) {
         screen.classList.remove('active');
     });
     document.getElementById(screenId).classList.add('active');
-}
-
-// Обработка нажатий для анимации
-function tap() {
-    const tapImage = document.querySelector('.tap-image');
-    tapImage.classList.add('tap-animate');
-    setTimeout(() => {
-        tapImage.classList.remove('tap-animate');
-    }, 100); // Удаляем класс через 100 мс
 }
 
 // Инициализация экрана при загрузке
