@@ -1,10 +1,10 @@
+/* Основные стили */
 body {
   font-family: 'Press Start 2P', cursive; /* Шрифт в стиле пиксельных игр */
   background-color: #222;
   color: white;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Предотвращение прокрутки страницы */
 }
 
 .game-container {
@@ -40,27 +40,30 @@ body {
   margin-right: 10px;
 }
 
+#coins {
+  font-size: 18px; /* Увеличенный шрифт для текста с количеством монет */
+}
+
 .tap-button-container {
   margin: 20px;
 }
 
 .tap-image {
-  width: 300px; /* Задайте размер изображения */
+  width: 300px;
   cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease; /* Плавный переход для эффекта нажатия */
-  touch-action: manipulation; /* Предотвращение масштабирования и панорамирования на мобильных устройствах */
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  touch-action: manipulation; /* Для предотвращения зумирования на мобильных устройствах */
 }
 
 .tap-image:active {
-  transform: scale(0.9); /* Уменьшение размера при нажатии */
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Добавление внутреннего тени для эффекта нажатия */
+  transform: scale(0.9);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Обеспечим корректное отображение на мобильных устройствах */
-@media (max-width: 768px) {
-  .tap-image {
-    width: 80vw; /* Ширина кнопки на мобильных устройствах */
-  }
+/* Анимация для тапалки */
+.tap-image.tapped {
+  transform: scale(0.9); /* Уменьшение при клике */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Внутренняя тень */
 }
 
 .pixel-text {
@@ -68,9 +71,12 @@ body {
   font-size: 12px;
 }
 
+/* Flexbox для карточек */
 .cards-container {
   display: flex;
+  flex-wrap: wrap; /* Карточки будут оборачиваться */
   justify-content: space-around;
+  gap: 20px; /* Пробел между карточками */
   margin-top: 30px;
 }
 
@@ -79,7 +85,7 @@ body {
   padding: 10px;
   border: 2px solid white;
   border-radius: 10px;
-  width: 120px;
+  width: calc(50% - 20px); /* 50% ширины строки минус пробел */
   text-align: center;
   cursor: pointer;
 }
