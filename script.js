@@ -11,6 +11,12 @@ function updateCoinsDisplay() {
     localStorage.setItem('profitPerHour', profitPerHour);
 }
 
+// Функция для обработки кликов по кнопке "тап"
+function tap() {
+    coins += 2; // 2 монеты за каждый тап
+    updateCoinsDisplay();
+}
+
 // Функция покупки карточек
 function buyCard(type) {
     let price, profit;
