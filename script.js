@@ -54,10 +54,13 @@ function buyCard(type) {
 // Функция для начисления монет за прошедшее время, пока игрок отсутствовал
 function addCoinsForElapsedTime() {
     const currentTime = Date.now();
-    const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время, прошедшее с момента последнего обновления в секундах
-    const coinsToAdd = (profitPerHour / 3600) * timeElapsed; // Рассчитываем, сколько монет добавить за прошедшее время
+    const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время, прошедшее в секундах
+    const wholeSecondsElapsed = Math.floor(timeElapsed); // Округляем до целого количества секунд
+
+    // Рассчитываем прибыль за целые секунды
+    const coinsToAdd = (profitPerHour / 3600) * wholeSecondsElapsed;
     coins += coinsToAdd;
-    lastUpdateTime = currentTime;
+    lastUpdateTime = currentTime; // Обновляем время последнего обновления
     localStorage.setItem('lastUpdateTime', lastUpdateTime);
 }
 
