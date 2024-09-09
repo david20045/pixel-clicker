@@ -5,7 +5,7 @@ body {
   color: white;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: hidden; /* Блокируем прокрутку */
 }
 
 .game-container {
@@ -51,16 +51,16 @@ body {
 
 .tap-image {
   width: 300px;
-  height: 300px;
+  height: 300px; /* Высота и ширина одинаковы для круглой формы */
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-  touch-action: manipulation; /* Для предотвращения зумирования на мобильных устройствах */
-  border-radius: 50%;
+  touch-action: manipulation;
+  border-radius: 50%; /* Делаем изображение круглым */
 }
 
 .tap-image:active {
   transform: scale(0.9);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Внутренняя тень */
 }
 
 /* Анимация для тапалки */
@@ -114,4 +114,53 @@ body {
   border: none;
   border-radius: 5px;
   color: white;
+}
+
+/* Стили для вкладок "Задания" и "Друзья" */
+#tasks .cards-container, #friends .cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+#tasks .card, #friends .card {
+  background-color: #333;
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 10px;
+  width: calc(50% - 20px);
+  text-align: center;
+}
+
+#tasks .card button, #friends .card button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #555;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+#tasks .card a {
+  display: block;
+  color: white;
+  margin-top: 10px;
+  text-decoration: none;
+  background-color: #666;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+#tasks .card a:hover {
+  background-color: #777;
+}
+
+/* Ссылка для приглашения в "Друзьях" */
+#invite-link {
+  margin-top: 10px;
+  color: white;
+  font-size: 10px;
+  word-wrap: break-word; /* Чтобы длинная ссылка переносилась */
 }
