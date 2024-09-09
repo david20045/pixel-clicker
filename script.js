@@ -2,22 +2,26 @@
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
 let lastUpdateTime = localStorage.getItem('lastUpdateTime') || Date.now();
-let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0; // Количество приглашенных друзей
+let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0;
+let friendsRegistered = parseInt(localStorage.getItem('friendsRegistered')) || 0; // Количество зарегистрированных друзей
+let telegramSubscribed = localStorage.getItem('telegramSubscribed') === 'true'; // Проверка подписки на Telegram
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
-    document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`; // Округляем количество монет
+    document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
     document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
-    // Сохраняем данные в Local Storage
     localStorage.setItem('coins', coins);
     localStorage.setItem('profitPerHour', profitPerHour);
-    localStorage.setItem('invitedFriends', invitedFriends); // Сохраняем приглашенных друзей
+    localStorage.setItem('invitedFriends', invitedFriends);
+    localStorage.setItem('friendsRegistered', friendsRegistered); // Сохраняем количество зарегистрированных друзей
+    localStorage.setItem('telegramSubscribed', telegramSubscribed); // Сохраняем состояние подписки на Telegram
+    updateInviteTaskStatus(); // Обновление состояния приглашений
 }
 
 // Функция нажатия на тапалку
 function tap() {
-    coins += 1; // Увеличиваем количество монет за клик
-    animateTap(); // Анимация при нажатии
+    coins += 1;
+    animateTap();
     updateCoinsDisplay();
 }
 
@@ -25,13 +29,13 @@ function tap() {
 function animateTap() {
     const tapImage = document.querySelector('.tap-image');
     tapImage.classList.add('tapped');
-    setTimeout(() => tapImage.classList.remove('tapped'), 100); // Сбрасываем анимацию через 100мс
+    setTimeout(() => tapImage.classList.remove('tapped'), 100);
 }
 
 // Функция покупки карточек
 function buyCard(type) {
     let price, profit;
-    
+
     if (type === 'tree') {
         price = 100;
         profit = 1000;
@@ -53,26 +57,25 @@ function buyCard(type) {
     }
 }
 
-// Функция для начисления монет за прошедшее время, пока игрок отсутствовал
+// Функция для начисления монет за прошедшее время
 function addCoinsForElapsedTime() {
     const currentTime = Date.now();
-    const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время, прошедшее в секундах
+    const timeElapsed = (currentTime - lastUpdateTime) / 1000;
 
     if (timeElapsed > 0) {
-        // Рассчитываем прибыль за каждую секунду, прошедшую с момента выхода
-        const coinsToAdd = (profitPerHour / 3600) * timeElapsed; 
+        const coinsToAdd = (profitPerHour / 3600) * timeElapsed;
         coins += coinsToAdd;
     }
-    
-    lastUpdateTime = currentTime; // Обновляем время последнего обновления
+
+    lastUpdateTime = currentTime;
     localStorage.setItem('lastUpdateTime', lastUpdateTime);
 }
 
 // Таймер для начисления прибыли каждую секунду
 setInterval(function() {
-    coins += profitPerHour / 3600; // Прибыль каждую секунду на основе прибыли в час
+    coins += profitPerHour / 3600;
     updateCoinsDisplay();
-}, 1000); // Таймер каждые 1 секунду
+}, 1000);
 
 // Переключение между экранами
 function showScreen(screenId) {
@@ -84,35 +87,92 @@ function showScreen(screenId) {
 
 // Выполнение задания с подпиской на Telegram
 function completeTelegramTask() {
-    coins += 1000000; // Начисляем 1 000 000 монет за подписку
-    alert("Вы получили 1 000 000 монет за подписку на Telegram!");
-    updateCoinsDisplay(); // Обновляем отображение монет
+    const userId = Date.now(); // Временный идентификатор пользователя
+
+    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/check-subscription', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.subscribed) {
+            telegramSubscribed = true; // Обновляем состояние подписки
+            coins += 1000000; 
+            alert("Вы получили 1 000 000 монет за подписку на Telegram!");
+            updateCoinsDisplay();
+        } else {
+            alert('Вы не подписаны на канал.');
+        }
+    })
+    .catch(error => console.error('Ошибка проверки подписки:', error));
 }
 
 // Генерация пригласительной ссылки
 function generateInviteLink() {
-    const inviteLink = `https://yourgame.com/invite?user=${Date.now()}`;
-    document.getElementById('invite-link').textContent = `Ваша ссылка: ${inviteLink}`;
-    alert("Ссылка создана! Скопируйте её и отправьте друзьям.");
+    const userId = Date.now(); 
+
+    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/generate-invite', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const inviteLink = data.inviteLink;
+        document.getElementById('invite-link').textContent = `Ваша ссылка: ${inviteLink}`;
+        navigator.clipboard.writeText(inviteLink);
+        alert("Ссылка скопирована! Отправьте её друзьям.");
+    })
+    .catch(error => console.error('Ошибка создания ссылки:', error));
 }
 
-// Функция для начисления награды за приглашенных друзей
-function inviteFriendTask(numFriends) {
-    if (numFriends === 1) {
-        coins += 5000; // За одного друга
-        alert("Вы получили 5000 монет за приглашение одного друга!");
-    } else if (numFriends === 5) {
-        coins += 2000000; // За пять друзей
-        alert("Вы получили 2 000 000 монет за приглашение пяти друзей!");
+// Функция для обработки регистрации друга по ссылке
+function friendRegistered() {
+    friendsRegistered += 1;
+    coins += 5000; // Награда за одного друга
+    alert(`Друг зарегистрировался! Вы получили 5000 монет.`);
+    updateCoinsDisplay();
+}
+
+// Обновление статуса заданий по приглашению
+function updateInviteTaskStatus() {
+    // Если зарегистрировался хотя бы один друг, активируем карточку "Забрать подарок"
+    if (friendsRegistered >= 1) {
+        document.getElementById('invite-one-reward').style.display = 'block';
     }
     
-    invitedFriends += numFriends; // Увеличиваем количество приглашенных друзей
-    updateCoinsDisplay(); // Обновляем экран с монетами
+    // Если зарегистрировались 5 друзей, активируем награду за 5 друзей
+    if (friendsRegistered >= 5) {
+        document.getElementById('invite-five-reward').style.display = 'block';
+    }
+
+    // Обновление прогресса на экране друзей
+    document.getElementById('friends-registered-count').textContent = `Приглашено и зарегистрировано: ${friendsRegistered} друзей`;
+}
+
+// Функция для получения награды за приглашенных друзей
+function collectInviteReward(numFriends) {
+    if (numFriends === 1 && friendsRegistered >= 1) {
+        coins += 5000; // За одного друга
+        alert("Вы получили 5000 монет за приглашение одного друга!");
+        updateCoinsDisplay();
+        document.getElementById('invite-one-reward').style.display = 'none'; // Скрываем кнопку после получения награды
+    } else if (numFriends === 5 && friendsRegistered >= 5) {
+        coins += 2000000; // За пять друзей
+        alert("Вы получили 2 000 000 монет за приглашение пяти друзей!");
+        updateCoinsDisplay();
+        document.getElementById('invite-five-reward').style.display = 'none'; // Скрываем кнопку после получения награды
+    }
 }
 
 // Инициализация экрана при загрузке
 window.onload = function() {
-    addCoinsForElapsedTime(); // Начисляем монеты за время, пока игрок отсутствовал
+    addCoinsForElapsedTime();
     updateCoinsDisplay();
 }
 
