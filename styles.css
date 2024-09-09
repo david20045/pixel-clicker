@@ -103,28 +103,29 @@ body {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding: 10px; /* Уменьшаем padding */
+  padding: 15px 0; /* Увеличиваем высоту панели */
   background-color: #444;
+  height: 60px; /* Увеличиваем высоту панели */
 }
 
 .nav-bar button {
   font-size: 10px; /* Уменьшаем размер шрифта для кнопок */
-  padding: 8px 5px; /* Уменьшаем padding */
+  padding: 6px 8px; /* Уменьшаем padding, чтобы кнопки не выходили за рамки */
   cursor: pointer;
   background-color: #555;
   border: none;
   border-radius: 5px;
   color: white;
   flex: 1; /* Равномерно распределяем кнопки */
-  margin: 0 5px; /* Минимальный отступ между кнопками */
-  max-width: 100px; /* Ограничиваем максимальную ширину кнопок */
+  margin: 0 4px; /* Устанавливаем минимальные отступы между кнопками */
+  max-width: 90px; /* Ограничиваем максимальную ширину кнопок */
 }
 
 /* Адаптивное поведение для мобильных устройств */
 @media (max-width: 600px) {
   .nav-bar button {
     font-size: 8px; /* Уменьшаем шрифт для мобильных устройств */
-    padding: 6px 3px; /* Уменьшаем padding */
+    padding: 5px 6px; /* Уменьшаем padding */
   }
 }
 
@@ -137,6 +138,7 @@ body {
 #friends .card button {
   width: 100%; /* Ширина кнопки на всю карточку */
   box-sizing: border-box; /* Чтобы кнопка не выходила за рамки */
+  font-size: 10px; /* Уменьшаем шрифт на кнопке для ссылки */
 }
 
 #invite-link {
@@ -144,4 +146,21 @@ body {
   white-space: normal; /* Разрешаем перенос по строкам */
   max-width: 100%; /* Ссылка не выходит за рамки карточки */
   overflow-wrap: break-word; /* Переносим длинные слова */
+}
+
+/* Стили для вкладки "Задания" */
+#tasks .card a {
+  display: block;
+  color: #4e76a4; /* Более приятный и менее яркий синий цвет */
+  margin-top: 10px; /* Добавляем отступ между ссылкой и кнопкой */
+  text-decoration: none; /* Убираем подчеркивание у ссылки */
+  font-size: 12px;
+}
+
+#tasks .card a:hover {
+  color: #5c86b8; /* Изменение цвета при наведении */
+}
+
+#tasks .card button {
+  margin-top: 15px; /* Увеличиваем отступ между кнопкой и текстом */
 }
