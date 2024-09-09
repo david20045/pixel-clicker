@@ -105,7 +105,7 @@ body {
   width: 100%;
   padding: 15px 0; /* Увеличиваем высоту панели */
   background-color: #444;
-  height: 60px; /* Увеличиваем высоту панели */
+  height: 40px; /* Увеличиваем высоту панели */
 }
 
 .nav-bar button {
