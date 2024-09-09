@@ -2,6 +2,7 @@
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
 let lastUpdateTime = localStorage.getItem('lastUpdateTime') || Date.now();
+let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0; // Количество приглашенных друзей
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
@@ -10,6 +11,7 @@ function updateCoinsDisplay() {
     // Сохраняем данные в Local Storage
     localStorage.setItem('coins', coins);
     localStorage.setItem('profitPerHour', profitPerHour);
+    localStorage.setItem('invitedFriends', invitedFriends); // Сохраняем приглашенных друзей
 }
 
 // Функция нажатия на тапалку
@@ -78,6 +80,34 @@ function showScreen(screenId) {
         screen.classList.remove('active');
     });
     document.getElementById(screenId).classList.add('active');
+}
+
+// Выполнение задания с подпиской на Telegram
+function completeTelegramTask() {
+    coins += 1000000; // Начисляем 1 000 000 монет за подписку
+    alert("Вы получили 1 000 000 монет за подписку на Telegram!");
+    updateCoinsDisplay(); // Обновляем отображение монет
+}
+
+// Генерация пригласительной ссылки
+function generateInviteLink() {
+    const inviteLink = `https://yourgame.com/invite?user=${Date.now()}`;
+    document.getElementById('invite-link').textContent = `Ваша ссылка: ${inviteLink}`;
+    alert("Ссылка создана! Скопируйте её и отправьте друзьям.");
+}
+
+// Функция для начисления награды за приглашенных друзей
+function inviteFriendTask(numFriends) {
+    if (numFriends === 1) {
+        coins += 5000; // За одного друга
+        alert("Вы получили 5000 монет за приглашение одного друга!");
+    } else if (numFriends === 5) {
+        coins += 2000000; // За пять друзей
+        alert("Вы получили 2 000 000 монет за приглашение пяти друзей!");
+    }
+    
+    invitedFriends += numFriends; // Увеличиваем количество приглашенных друзей
+    updateCoinsDisplay(); // Обновляем экран с монетами
 }
 
 // Инициализация экрана при загрузке
