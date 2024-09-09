@@ -14,7 +14,7 @@ app.post('/generate-invite', (req, res) => {
     const userId = req.body.userId; // Получаем ID пользователя (например, временный ID)
     const inviteCode = Date.now().toString(); // Генерируем уникальный код
 
-    const inviteLink = `http://localhost:3000/register?inviteCode=${inviteCode}`;
+    const inviteLink = `${req.protocol}://${req.get('host')}/register?inviteCode=${inviteCode}`;
     res.json({ inviteLink }); // Возвращаем ссылку на клиент
 });
 
@@ -40,9 +40,11 @@ app.post('/check-subscription', async (req, res) => {
     }
 });
 
-// Запуск сервера на порту 3000
-app.listen(3000, () => {
-    console.log('Сервер запущен на http://localhost:3000');
+// Используем динамический порт от Heroku или порт 3000 для локальной разработки
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Сервер запущен на порту ${PORT}`);
 });
 
 
