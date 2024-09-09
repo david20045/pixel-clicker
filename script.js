@@ -1,7 +1,7 @@
 // Инициализация переменных
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
-let lastUpdateTime = localStorage.getItem('lastUpdateTime') || Date.now();
+let lastUpdateTime = parseInt(localStorage.getItem('lastUpdateTime')) || Date.now();
 let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0;
 let friendsRegistered = parseInt(localStorage.getItem('friendsRegistered')) || 0; // Количество зарегистрированных друзей
 let telegramSubscribed = localStorage.getItem('telegramSubscribed') === 'true'; // Проверка подписки на Telegram
@@ -123,10 +123,14 @@ function generateInviteLink() {
     })
     .then(response => response.json())
     .then(data => {
-        const inviteLink = data.inviteLink;
-        document.getElementById('invite-link').textContent = `Ваша ссылка: ${inviteLink}`;
-        navigator.clipboard.writeText(inviteLink);
-        alert("Ссылка скопирована! Отправьте её друзьям.");
+        if (data.inviteLink) {
+            const inviteLink = data.inviteLink;
+            document.getElementById('invite-link').textContent = `Ваша ссылка: ${inviteLink}`;
+            navigator.clipboard.writeText(inviteLink);
+            alert("Ссылка скопирована! Отправьте её друзьям.");
+        } else {
+            alert("Ошибка: ссылка не была возвращена.");
+        }
     })
     .catch(error => console.error('Ошибка создания ссылки:', error));
 }
