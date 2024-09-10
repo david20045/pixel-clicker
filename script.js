@@ -24,6 +24,73 @@ function updateCoinsDisplay() {
     updateInviteTaskStatus(); // Обновление состояния заданий
 }
 
+// Функция нажатия на тапалку
+function tap() {
+    coins += 1;
+    animateTap();
+    updateCoinsDisplay();
+}
+
+// Анимация нажатия на тапалку
+function animateTap() {
+    const tapImage = document.querySelector('.tap-image');
+    tapImage.classList.add('tapped');
+    setTimeout(() => tapImage.classList.remove('tapped'), 100);
+}
+
+// Функция покупки карточек
+function buyCard(type) {
+    let price, profit;
+
+    if (type === 'tree') {
+        price = 100;
+        profit = 1000;
+    } else if (type === 'stone') {
+        price = 200;
+        profit = 2000;
+    } else if (type === 'leaf') {
+        price = 300;
+        profit = 3000;
+    }
+
+    if (coins >= price) {
+        coins -= price;
+        profitPerHour += profit;
+        alert(`Вы купили ${type}, теперь ваша прибыль: ${profitPerHour} монет в час!`);
+        updateCoinsDisplay();
+    } else {
+        alert("Недостаточно монет.");
+    }
+}
+
+// Начисление монет за прошедшее время, пока игрок отсутствовал
+function addCoinsForElapsedTime() {
+    const currentTime = Date.now();
+    const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время в секундах
+
+    if (timeElapsed > 0) {
+        const coinsToAdd = (profitPerHour / 3600) * timeElapsed;
+        coins += coinsToAdd;
+    }
+
+    lastUpdateTime = currentTime;
+    localStorage.setItem('lastUpdateTime', lastUpdateTime);
+}
+
+// Таймер для начисления прибыли каждую секунду
+setInterval(function() {
+    coins += profitPerHour / 3600;
+    updateCoinsDisplay();
+}, 1000);
+
+// Переключение между экранами
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+}
+
 // Функция генерации пригласительной ссылки через бота
 function generateInviteLink() {
     const inviteLink = `https://t.me/YourBotName?start=${Date.now()}`; // Ссылка для приглашения через бота
