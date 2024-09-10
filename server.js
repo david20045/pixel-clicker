@@ -15,9 +15,9 @@ app.use(cors(corsOptions));
 
 // Генерация пригласительной ссылки
 app.post('/generate-invite', (req, res) => {
-    const userId = req.body.userId;
-    const inviteCode = Date.now().toString();
-    const inviteLink = `https://t.me/PixelClickerGameBot?start=${inviteCode}`;
+    const userId = req.body.userId; // Идентификатор текущего пользователя
+    const inviteCode = Date.now().toString(); // Уникальный код для ссылки
+    const inviteLink = `https://t.me/PixelClickerGameBot?start=${inviteCode}&referrer=${userId}`;
     res.json({ inviteLink });
 });
 
@@ -48,7 +48,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
-
 
 
 
