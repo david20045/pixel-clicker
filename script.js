@@ -11,7 +11,7 @@ let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || {}; /
 function updateCoinsDisplay() {
     document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
     document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
-    document.getElementById('invited-friends-count').textContent = `Приглашено друзей: ${friendsRegistered}`;
+    document.getElementById('invited-friends-count').textContent = `Приглашено друзей: ${invitedFriends}`;
     
     // Сохраняем данные
     localStorage.setItem('coins', coins);
@@ -94,6 +94,8 @@ function showScreen(screenId) {
 // Функция генерации пригласительной ссылки через бота
 function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
+    localStorage.setItem('userId', userId); // Сохранение userId для последующих запросов
+
     fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/generate-invite', {
         method: 'POST',
         headers: {
@@ -105,6 +107,7 @@ function generateInviteLink() {
     .then(data => {
         const inviteLink = data.inviteLink;
         document.getElementById('invite-link').textContent = inviteLink;
+        document.getElementById('invite-link').style.wordWrap = 'break-word';
         navigator.clipboard.writeText(inviteLink)
             .then(() => alert("Ссылка скопирована в буфер обмена!"))
             .catch(err => console.error('Ошибка при копировании ссылки:', err));
@@ -114,12 +117,14 @@ function generateInviteLink() {
 
 // Проверка выполнения задания с подпиской на Telegram
 function completeTelegramTask() {
+    const userId = localStorage.getItem('userId') || Date.now().toString();
+
     fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/check-subscription', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: Date.now() }) // Уникальный ID пользователя
+        body: JSON.stringify({ userId })
     })
     .then(response => response.json())
     .then(data => {
@@ -156,17 +161,8 @@ function inviteFriendTask(numFriends) {
 
 // Обновление статуса выполнения заданий по приглашению друзей
 function updateInviteTaskStatus() {
-    if (friendsRegistered >= 1) {
-        document.getElementById('invite-one-reward').style.display = 'block'; // Показать награду за одного друга
-    } else {
-        document.getElementById('invite-one-reward').style.display = 'none'; // Скрыть, если нет друзей
-    }
-    
-    if (friendsRegistered >= 5) {
-        document.getElementById('invite-five-reward').style.display = 'block'; // Показать награду за 5 друзей
-    } else {
-        document.getElementById('invite-five-reward').style.display = 'none'; // Скрыть, если меньше 5 друзей
-    }
+    document.getElementById('invite-one-reward').style.display = friendsRegistered >= 1 ? 'block' : 'none';
+    document.getElementById('invite-five-reward').style.display = friendsRegistered >= 5 ? 'block' : 'none';
 
     // Галочки выполнения заданий
     if (completedTasks['friend1']) {
@@ -184,12 +180,12 @@ function showScreenOnStart() {
     const userId = urlParams.get('referrer');  // Получение параметра referrer
     if (userId) {
         // Можно выполнить действия в зависимости от параметра
-        fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/track-invite', {
+        fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/register-friend', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ referrer: userId })
+            body: JSON.stringify({ inviteCode: urlParams.get('start'), referrer: userId })
         })
         .then(response => response.json())
         .then(data => {
