@@ -5,11 +5,6 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Обработчик для корневого пути
-app.get('/', (req, res) => {
-    res.send('Сервер работает!');
-});
-
 let users = {}; // userId: {inviteCount, telegramSubscribed, invitedFriends, ...}
 let invites = {}; // inviteCode: userId
 
