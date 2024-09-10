@@ -1,37 +1,3 @@
-// Обработка регистрации друга по ссылке
-function handleRegistration() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const inviteCode = urlParams.get('start'); // Получаем уникальный код из URL
-
-    if (inviteCode) {
-        // Отправляем запрос на сервер для обработки регистрации друга
-        fetch('https://your-server-url/register-friend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ inviteCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Если регистрация прошла успешно
-                alert('Спасибо за регистрацию! Ваш друг получил бонус.');
-            } else {
-                // Если произошла ошибка
-                alert('Ошибка регистрации.');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка регистрации:', error);
-            alert('Произошла ошибка при регистрации.');
-        });
-    }
-}
-
-// Вызовите эту функцию при загрузке страницы, если вы хотите сразу обработать регистрацию
-window.onload = handleRegistration;
-
 // Инициализация переменных
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
@@ -119,136 +85,66 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
 }
 
-// Выполнение задания с подпиской на Telegram
-function completeTelegramTask() {
-    const userId = Date.now(); // Временный идентификатор пользователя
-
-    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/check-subscription', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.subscribed) {
-            telegramSubscribed = true; // Обновляем состояние подписки
-            coins += 1000000; 
-            alert("Вы получили 1 000 000 монет за подписку на Telegram!");
-            updateCoinsDisplay();
-        } else {
-            alert('Вы не подписаны на канал.');
-        }
-    })
-    .catch(error => console.error('Ошибка проверки подписки:', error));
-}
-
-// Генерация пригласительной ссылки
+// Генерация ссылки для приглашения друга
 function generateInviteLink() {
-    const userId = Date.now(); 
-
-    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/generate-invite', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.inviteLink) {
-            const inviteLink = data.inviteLink;
-            const inviteLinkElement = document.getElementById('invite-link');
-            if (inviteLinkElement) {
-                inviteLinkElement.textContent = `Ваша ссылка: ${inviteLink}`;
-                navigator.clipboard.writeText(inviteLink)
-                    .then(() => alert("Ссылка скопирована! Отправьте её друзьям."))
-                    .catch(err => console.error('Ошибка при копировании ссылки:', err));
-            } else {
-                console.error('Элемент с id="invite-link" не найден.');
-            }
-        } else {
-            alert("Ошибка: ссылка не была возвращена.");
-        }
-    })
-    .catch(error => console.error('Ошибка создания ссылки:', error));
+    const inviteLink = `https://t.me/PixelClickerGameBot?start=${Date.now()}`;
+    document.getElementById('invite-link').textContent = inviteLink;
+    navigator.clipboard.writeText(inviteLink);
+    alert('Ссылка скопирована в буфер обмена!');
 }
 
-// Функция для обработки регистрации друга по ссылке
-function handleRegistration() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const inviteCode = urlParams.get('start'); // Получаем уникальный код из URL
-
-    if (inviteCode) {
-        fetch('https://your-server-url/register-friend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ inviteCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Спасибо за регистрацию! Ваш друг получил бонус.');
-            } else {
-                alert('Ошибка регистрации.');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка регистрации:', error);
-            alert('Произошла ошибка при регистрации.');
-        });
+// Выполнение задания: Подписка на Telegram
+function completeTelegramTask() {
+    // В реальном приложении сюда можно добавить логику проверки подписки через Telegram API
+    if (!telegramSubscribed) {
+        coins += 1000000;
+        telegramSubscribed = true;
+        localStorage.setItem('telegramSubscribed', 'true');
+        updateCoinsDisplay();
+        alert('Вы подписались на Telegram-канал и получили 1 000 000 монет!');
+    } else {
+        alert('Вы уже подписаны на Telegram-канал!');
     }
 }
 
-// Вызовите эту функцию при загрузке страницы, если вы хотите сразу обработать регистрацию
-window.onload = handleRegistration;
+// Функция для завершения заданий по приглашению друзей
+function collectInviteReward(count) {
+    if (count === 1 && friendsRegistered >= 1) {
+        coins += 5000;
+        friendsRegistered -= 1;
+        updateCoinsDisplay();
+        alert('Вы получили 5000 монет за приглашение одного друга!');
+    } else if (count === 5 && friendsRegistered >= 5) {
+        coins += 2000000;
+        friendsRegistered -= 5;
+        updateCoinsDisplay();
+        alert('Вы получили 2 000 000 монет за приглашение 5 друзей!');
+    } else {
+        alert(`Для получения награды нужно пригласить ${count} друзей.`);
+    }
+}
 
-// Обновление статуса заданий по приглашению
+// Обновление статуса выполнения заданий по приглашению друзей
 function updateInviteTaskStatus() {
-    // Если зарегистрировался хотя бы один друг, активируем карточку "Забрать подарок"
-    if (friendsRegistered >= 1) {
-        document.getElementById('invite-one-reward').style.display = 'block';
-    }
-    
-    // Если зарегистрировались 5 друзей, активируем награду за 5 друзей
-    if (friendsRegistered >= 5) {
-        document.getElementById('invite-five-reward').style.display = 'block';
-    }
-
-    // Обновление прогресса на экране друзей
-    document.getElementById('friends-registered-count').textContent = `Приглашено и зарегистрировано: ${friendsRegistered} друзей`;
+    document.getElementById('invite-one-reward').style.display = friendsRegistered >= 1 ? 'block' : 'none';
+    document.getElementById('invite-five-reward').style.display = friendsRegistered >= 5 ? 'block' : 'none';
 }
 
-// Функция для получения награды за приглашенных друзей
-function collectInviteReward(numFriends) {
-    if (numFriends === 1 && friendsRegistered >= 1) {
-        coins += 5000; // За одного друга
-        alert("Вы получили 5000 монет за приглашение одного друга!");
-        updateCoinsDisplay();
-        document.getElementById('invite-one-reward').style.display = 'none'; // Скрываем кнопку после получения награды
-    } else if (numFriends === 5 && friendsRegistered >= 5) {
-        coins += 2000000; // За пять друзей
-        alert("Вы получили 2 000 000 монет за приглашение пяти друзей!");
-        updateCoinsDisplay();
-        document.getElementById('invite-five-reward').style.display = 'none'; // Скрываем кнопку после получения награды
+// Функция для отображения экрана при запуске
+function showScreenOnStart() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const startapp = urlParams.get('startapp');
+    if (startapp) {
+        // Можно выполнить действия в зависимости от параметров
+        showScreen('exchange'); // Пример: автоматически открыть экран Биржа
+    } else {
+        showScreen('exchange'); // По умолчанию открываем экран Биржа
     }
 }
 
-// Инициализация экрана при загрузке
-window.onload = function() {
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
     addCoinsForElapsedTime();
     updateCoinsDisplay();
-}
-
-// Сохранение времени последнего обновления перед закрытием/перезагрузкой
-window.addEventListener('beforeunload', function() {
-    localStorage.setItem('coins', coins);
-    localStorage.setItem('profitPerHour', profitPerHour);
-    localStorage.setItem('lastUpdateTime', lastUpdateTime);
-    localStorage.setItem('invitedFriends', invitedFriends);
-    localStorage.setItem('friendsRegistered', friendsRegistered);
-    localStorage.setItem('telegramSubscribed', telegramSubscribed);
+    showScreenOnStart(); // Проверка и отображение нужного экрана при запуске
 });
