@@ -125,9 +125,15 @@ function generateInviteLink() {
     .then(data => {
         if (data.inviteLink) {
             const inviteLink = data.inviteLink;
-            document.getElementById('invite-link').textContent = `Ваша ссылка: ${inviteLink}`;
-            navigator.clipboard.writeText(inviteLink);
-            alert("Ссылка скопирована! Отправьте её друзьям.");
+            const inviteLinkElement = document.getElementById('invite-link');
+            if (inviteLinkElement) {
+                inviteLinkElement.textContent = `Ваша ссылка: ${inviteLink}`;
+                navigator.clipboard.writeText(inviteLink)
+                    .then(() => alert("Ссылка скопирована! Отправьте её друзьям."))
+                    .catch(err => console.error('Ошибка при копировании ссылки:', err));
+            } else {
+                console.error('Элемент с id="invite-link" не найден.');
+            }
         } else {
             alert("Ошибка: ссылка не была возвращена.");
         }
