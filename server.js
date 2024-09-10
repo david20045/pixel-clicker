@@ -20,17 +20,16 @@ app.get('/', (req, res) => {
 
 // Маршрут для генерации пригласительной ссылки
 app.post('/generate-invite', (req, res) => {
-    const userId = req.body.userId; // Получаем ID пользователя (например, временный ID)
-    console.log(`Генерация ссылки для пользователя с ID: ${userId}`); // Логируем ID
+    const userId = req.body.userId; // Получаем ID пользователя
     const inviteCode = Date.now().toString(); // Генерируем уникальный код
 
-    const inviteLink = `${req.protocol}://${req.get('host')}/register?inviteCode=${inviteCode}`;
-    console.log(`Сгенерированная ссылка: ${inviteLink}`); // Логируем ссылку
+    // Формируем правильную ссылку для Telegram
+    const inviteLink = `https://t.me/PixelClickerGameBot?start=${inviteCode}`;
     res.json({ inviteLink }); // Возвращаем ссылку на клиент
 });
 
 // Маршрут для проверки подписки на Telegram
-const TELEGRAM_TOKEN = 'your-telegram-bot-token'; // Вставь сюда токен своего бота
+const TELEGRAM_TOKEN = '7375840877:AAEiITuGMC44sMktZ6cl4qLFN6ZdkT_jBe4'; // Ваш токен
 const CHANNEL_ID = '@yourchannel'; // Замените на ID или название вашего Telegram-канала
 
 app.post('/check-subscription', async (req, res) => {
@@ -57,7 +56,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
-
 
 
 
