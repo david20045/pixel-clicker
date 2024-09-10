@@ -5,9 +5,6 @@ const fetch = require('node-fetch'); // Для запросов к Telegram API
 const app = express();
 app.use(express.json()); // Позволяет серверу принимать JSON-данные
 
-// Настройка CORS для разрешения запросов с любых источников (небезопасно)
-app.use(cors()); // Разрешить запросы с любых источников
-
 // Настройка CORS для разрешения запросов с твоего фронтенд-домена
 const corsOptions = {
     origin: 'https://david20045.github.io', // Разрешаем запросы с домена GitHub Pages
@@ -60,6 +57,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
+
 
 
 
