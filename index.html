@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Pixel Clicker Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -18,9 +18,9 @@
                     <span id="coins" class="pixel-text">Монеты: 0</span>
                 </div>
                 <div class="tap-button-container">
-                    <img src="https://imageup.ru/img181/4909204/new-piskel-1.png" class="tap-image" alt="Tap Button" onclick="tap()"> <!-- Просто изображение, которое вы добавите -->
+                    <img src="https://imageup.ru/img18/4909633/774944f3-e758-428b-8968-0c0eb2820a8a-2.png" class="tap-image" alt="Tap Button" onclick="tap()"> <!-- Картинка с монетой для нажатия -->
                 </div>
-                <span id="profit-per-hour" class="pixel-text">Прибыль в час: 0</span> <!-- Надпись с прибылью в час -->
+                <span id="profit-per-hour" class="pixel-text">Прибыль в час: 0</span> <!-- Отображение прибыли в час -->
             </div>
         </div>
 
@@ -29,7 +29,7 @@
             <h1 class="pixel-text">Магазин</h1>
             <div class="cards-container">
                 <div class="card" onclick="buyCard('tree')">
-                    <img src="tree_pixel.png" alt="Tree">
+                    <img src="https://imageup.ru/img129/4909663/d0a39be1-c3a2-478d-9191-d11e280df730.png" alt="Tree">
                     <p class="pixel-text">Дерево - 100 монет (прибыль: +1000/час)</p>
                 </div>
                 <div class="card" onclick="buyCard('stone')">
@@ -43,6 +43,12 @@
             </div>
         </div>
 
+        <!-- Вкладка Airdrop (пустая) -->
+        <div id="airdrop" class="screen">
+            <h1 class="pixel-text">Airdrop</h1>
+            <p class="pixel-text">Здесь пока ничего нет.</p>
+        </div>
+
         <!-- Вкладка Задания -->
         <div id="tasks" class="screen">
             <h1 class="pixel-text">Задания</h1>
@@ -51,20 +57,19 @@
                 <div class="card">
                     <p class="pixel-text">Подпишитесь на наш Telegram-канал и получите 1 000 000 монет!</p>
                     <a href="https://t.me/example_channel" target="_blank" class="pixel-text">Перейти в Telegram</a>
-                    <button onclick="completeTelegramTask()" class="pixel-text">Проверить подписку</button>
+                    <button onclick="completeTelegramTask()" class="pixel-text">Выполнить</button>
                 </div>
 
                 <!-- Карточка: Пригласить друга -->
                 <div class="card">
                     <p class="pixel-text">Пригласите одного друга и получите 5000 монет</p>
-                    <p id="friends-registered-count" class="pixel-text">Приглашено и зарегистрировано: 0 друзей</p>
-                    <button id="invite-one-reward" style="display: none;" onclick="collectInviteReward(1)" class="pixel-text">Забрать 5000 монет</button>
+                    <button onclick="inviteFriendTask(1)" class="pixel-text">Пригласить друга</button>
                 </div>
 
                 <!-- Карточка: Пригласить 5 друзей -->
                 <div class="card">
                     <p class="pixel-text">Пригласите 5 друзей и получите 2 000 000 монет</p>
-                    <button id="invite-five-reward" style="display: none;" onclick="collectInviteReward(5)" class="pixel-text">Забрать 2 000 000 монет</button>
+                    <button onclick="inviteFriendTask(5)" class="pixel-text">Пригласить 5 друзей</button>
                 </div>
             </div>
         </div>
@@ -73,10 +78,23 @@
         <div id="friends" class="screen">
             <h1 class="pixel-text">Друзья</h1>
             <div class="cards-container">
+                <!-- Карточка с пригласительной ссылкой -->
                 <div class="card">
                     <p class="pixel-text">Пригласите друзей по ссылке и получите монеты!</p>
-                    <button onclick="generateInviteLink()" class="pixel-text">Скопировать ссылку</button>
+                    <button onclick="generateInviteLink()" class="pixel-text">Создать пригласительную ссылку</button>
                     <p id="invite-link" class="pixel-text"></p> <!-- Здесь будет показана ссылка -->
+                </div>
+
+                <!-- Карточка: Пригласить одного друга -->
+                <div class="card">
+                    <p class="pixel-text">Пригласите одного друга и получите 5000 монет</p>
+                    <button onclick="inviteFriendTask(1)" class="pixel-text">Пригласить друга</button>
+                </div>
+
+                <!-- Карточка: Пригласить 5 друзей -->
+                <div class="card">
+                    <p class="pixel-text">Пригласите 5 друзей и получите 2 000 000 монет</p>
+                    <button onclick="inviteFriendTask(5)" class="pixel-text">Пригласить 5 друзей</button>
                 </div>
             </div>
         </div>
@@ -85,6 +103,7 @@
         <div class="nav-bar">
             <button onclick="showScreen('exchange')" class="pixel-text">Биржа</button>
             <button onclick="showScreen('shop')" class="pixel-text">Магазин</button>
+            <button onclick="showScreen('airdrop')" class="pixel-text">Airdrop</button>
             <button onclick="showScreen('tasks')" class="pixel-text">Задания</button>
             <button onclick="showScreen('friends')" class="pixel-text">Друзья</button>
         </div>
