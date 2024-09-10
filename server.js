@@ -17,7 +17,7 @@ app.use(cors(corsOptions));
 app.post('/generate-invite', (req, res) => {
     const userId = req.body.userId; // Идентификатор текущего пользователя
     const inviteCode = Date.now().toString(); // Уникальный код для ссылки
-    const inviteLink = `https://t.me/PixelClickerGameBot?start=${inviteCode}&referrer=${userId}`;
+    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?start=${inviteCode}&referrer=${userId}`;
     res.json({ inviteLink });
 });
 
@@ -40,6 +40,19 @@ app.post('/check-subscription', async (req, res) => {
     } catch (error) {
         console.error('Ошибка при проверке подписки:', error);
         res.status(500).json({ error: 'Ошибка при проверке подписки' });
+    }
+});
+
+// Обработка регистрации приглашения
+app.post('/track-invite', (req, res) => {
+    const { referrer } = req.body;
+
+    // Логика для обработки приглашения
+    if (referrer) {
+        // Здесь можно сохранить информацию о приглашении или сделать что-то еще
+        res.json({ success: true });
+    } else {
+        res.status(400).json({ error: 'Неверный запрос' });
     }
 });
 
