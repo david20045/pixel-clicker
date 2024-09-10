@@ -133,10 +133,10 @@ function updateInviteTaskStatus() {
 // Функция для отображения экрана при запуске
 function showScreenOnStart() {
     const urlParams = new URLSearchParams(window.location.search);
-    const startapp = urlParams.get('startapp');
+    const startapp = urlParams.get('start');
     if (startapp) {
-        // Можно выполнить действия в зависимости от параметров
-        showScreen('exchange'); // Пример: автоматически открыть экран Биржа
+        // Выполняем действия в зависимости от параметра start
+        showScreen('exchange'); // Пример: автоматически открываем экран Биржа
     } else {
         showScreen('exchange'); // По умолчанию открываем экран Биржа
     }
