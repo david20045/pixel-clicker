@@ -93,11 +93,23 @@ function showScreen(screenId) {
 
 // Функция генерации пригласительной ссылки через бота
 function generateInviteLink() {
-    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame`;
-document.getElementById('invite-link').textContent = inviteLink;
-navigator.clipboard.writeText(inviteLink)
-    .then(() => alert("Ссылка скопирована в буфер обмена!"))
-    .catch(err => console.error('Ошибка при копировании ссылки:', err));
+    const userId = localStorage.getItem('userId') || Date.now().toString();
+    fetch('https://your-server-url/generate-invite', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const inviteLink = data.inviteLink;
+        document.getElementById('invite-link').textContent = inviteLink;
+        navigator.clipboard.writeText(inviteLink)
+            .then(() => alert("Ссылка скопирована в буфер обмена!"))
+            .catch(err => console.error('Ошибка при копировании ссылки:', err));
+    })
+    .catch(error => console.error('Ошибка при генерации ссылки:', error));
 }
 
 // Проверка выполнения задания с подпиской на Telegram
@@ -138,6 +150,7 @@ function inviteFriendTask(numFriends) {
     }
 
     invitedFriends += numFriends;
+    friendsRegistered += numFriends;
     updateCoinsDisplay();
 }
 
@@ -164,13 +177,27 @@ function updateInviteTaskStatus() {
 // Функция для отображения экрана при запуске
 function showScreenOnStart() {
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('user_id');  // Получение параметра user_id
+    const userId = urlParams.get('referrer');  // Получение параметра referrer
     if (userId) {
         // Можно выполнить действия в зависимости от параметра
-        showScreen('exchange'); // Пример: автоматически открыть экран Биржа
-    } else {
-        showScreen('exchange'); // По умолчанию открываем экран Биржа
+        fetch('https://your-server-url/track-invite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ referrer: userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Приглашение успешно зарегистрировано!");
+                friendsRegistered++;
+                updateInviteTaskStatus();
+            }
+        })
+        .catch(error => console.error('Ошибка при регистрации приглашения:', error));
     }
+    showScreen('exchange'); // По умолчанию открываем экран Биржа
 }
 
 // Инициализация экрана при загрузке страницы
