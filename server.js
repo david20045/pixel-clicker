@@ -1,8 +1,17 @@
 const express = require('express');
+const cors = require('cors'); // Подключаем библиотеку CORS
 const fetch = require('node-fetch'); // Для запросов к Telegram API
 
 const app = express();
 app.use(express.json()); // Позволяет серверу принимать JSON-данные
+
+// Настройка CORS для разрешения запросов с твоего фронтенд-домена
+const corsOptions = {
+    origin: 'https://david20045.github.io', // Разрешаем запросы с домена GitHub Pages
+    optionsSuccessStatus: 200 // Для старых браузеров
+};
+
+app.use(cors(corsOptions)); // Применяем CORS ко всем маршрутам
 
 // Пример простого маршрута для проверки работы сервера
 app.get('/', (req, res) => {
@@ -12,9 +21,11 @@ app.get('/', (req, res) => {
 // Маршрут для генерации пригласительной ссылки
 app.post('/generate-invite', (req, res) => {
     const userId = req.body.userId; // Получаем ID пользователя (например, временный ID)
+    console.log(`Генерация ссылки для пользователя с ID: ${userId}`); // Логируем ID
     const inviteCode = Date.now().toString(); // Генерируем уникальный код
 
     const inviteLink = `${req.protocol}://${req.get('host')}/register?inviteCode=${inviteCode}`;
+    console.log(`Сгенерированная ссылка: ${inviteLink}`); // Логируем ссылку
     res.json({ inviteLink }); // Возвращаем ссылку на клиент
 });
 
@@ -46,6 +57,8 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
+
+
 
 
 
