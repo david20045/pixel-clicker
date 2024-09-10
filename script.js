@@ -1,3 +1,37 @@
+// Обработка регистрации друга по ссылке
+function handleRegistration() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteCode = urlParams.get('start'); // Получаем уникальный код из URL
+
+    if (inviteCode) {
+        // Отправляем запрос на сервер для обработки регистрации друга
+        fetch('https://your-server-url/register-friend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inviteCode })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Если регистрация прошла успешно
+                alert('Спасибо за регистрацию! Ваш друг получил бонус.');
+            } else {
+                // Если произошла ошибка
+                alert('Ошибка регистрации.');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка регистрации:', error);
+            alert('Произошла ошибка при регистрации.');
+        });
+    }
+}
+
+// Вызовите эту функцию при загрузке страницы, если вы хотите сразу обработать регистрацию
+window.onload = handleRegistration;
+
 // Инициализация переменных
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
@@ -142,12 +176,35 @@ function generateInviteLink() {
 }
 
 // Функция для обработки регистрации друга по ссылке
-function friendRegistered() {
-    friendsRegistered += 1;
-    coins += 5000; // Награда за одного друга
-    alert(`Друг зарегистрировался! Вы получили 5000 монет.`);
-    updateCoinsDisplay();
+function handleRegistration() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteCode = urlParams.get('start'); // Получаем уникальный код из URL
+
+    if (inviteCode) {
+        fetch('https://your-server-url/register-friend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inviteCode })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Спасибо за регистрацию! Ваш друг получил бонус.');
+            } else {
+                alert('Ошибка регистрации.');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка регистрации:', error);
+            alert('Произошла ошибка при регистрации.');
+        });
+    }
 }
+
+// Вызовите эту функцию при загрузке страницы, если вы хотите сразу обработать регистрацию
+window.onload = handleRegistration;
 
 // Обновление статуса заданий по приглашению
 function updateInviteTaskStatus() {
@@ -187,6 +244,11 @@ window.onload = function() {
 }
 
 // Сохранение времени последнего обновления перед закрытием/перезагрузкой
-window.onbeforeunload = function() {
-    localStorage.setItem('lastUpdateTime', Date.now());
-};
+window.addEventListener('beforeunload', function() {
+    localStorage.setItem('coins', coins);
+    localStorage.setItem('profitPerHour', profitPerHour);
+    localStorage.setItem('lastUpdateTime', lastUpdateTime);
+    localStorage.setItem('invitedFriends', invitedFriends);
+    localStorage.setItem('friendsRegistered', friendsRegistered);
+    localStorage.setItem('telegramSubscribed', telegramSubscribed);
+});
