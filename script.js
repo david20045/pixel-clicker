@@ -94,7 +94,7 @@ function showScreen(screenId) {
 // Функция генерации пригласительной ссылки через бота
 function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
-    fetch('https://your-server-url/generate-invite', {
+    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/generate-invite', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ function generateInviteLink() {
 
 // Проверка выполнения задания с подпиской на Telegram
 function completeTelegramTask() {
-    fetch('https://your-heroku-app.herokuapp.com/check-subscription', {
+    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/check-subscription', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -158,10 +158,14 @@ function inviteFriendTask(numFriends) {
 function updateInviteTaskStatus() {
     if (friendsRegistered >= 1) {
         document.getElementById('invite-one-reward').style.display = 'block'; // Показать награду за одного друга
+    } else {
+        document.getElementById('invite-one-reward').style.display = 'none'; // Скрыть, если нет друзей
     }
     
     if (friendsRegistered >= 5) {
         document.getElementById('invite-five-reward').style.display = 'block'; // Показать награду за 5 друзей
+    } else {
+        document.getElementById('invite-five-reward').style.display = 'none'; // Скрыть, если меньше 5 друзей
     }
 
     // Галочки выполнения заданий
@@ -180,7 +184,7 @@ function showScreenOnStart() {
     const userId = urlParams.get('referrer');  // Получение параметра referrer
     if (userId) {
         // Можно выполнить действия в зависимости от параметра
-        fetch('https://your-server-url/track-invite', {
+        fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/track-invite', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
