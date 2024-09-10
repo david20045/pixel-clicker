@@ -99,5 +99,136 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Инициализация переменных
+        let coins = parseInt(localStorage.getItem('coins')) || 0;
+        let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
+        let lastUpdateTime = parseInt(localStorage.getItem('lastUpdateTime')) || Date.now();
+        let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0; // Количество приглашённых друзей
+        let friendsRegistered = parseInt(localStorage.getItem('friendsRegistered')) || 0; // Количество зарегистрированных друзей
+        let telegramSubscribed = localStorage.getItem('telegramSubscribed') === 'true'; // Проверка подписки на Telegram
+        let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || {}; // Выполненные задания
+
+        // Обновление экрана с монетами
+        function updateCoinsDisplay() {
+            document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
+            document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
+            document.getElementById('invited-friends-count').textContent = `Приглашено друзей: ${invitedFriends}`;
+            
+            // Сохраняем данные
+            localStorage.setItem('coins', coins);
+            localStorage.setItem('profitPerHour', profitPerHour);
+            localStorage.setItem('invitedFriends', invitedFriends);
+            localStorage.setItem('friendsRegistered', friendsRegistered);
+            localStorage.setItem('telegramSubscribed', telegramSubscribed);
+            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+            
+            updateInviteTaskStatus(); // Обновление состояния заданий
+        }
+
+        // Функция нажатия на тапалку
+        function tap() {
+            coins += 1;
+            animateTap();
+            updateCoinsDisplay();
+        }
+
+        // Анимация нажатия на тапалку
+        function animateTap() {
+            const tapImage = document.querySelector('.tap-image');
+            tapImage.classList.add('tapped');
+            setTimeout(() => tapImage.classList.remove('tapped'), 100);
+        }
+
+        // Функция покупки карточек
+        function buyCard(type) {
+            let price, profit;
+
+            if (type === 'tree') {
+                price = 100;
+                profit = 1000;
+            } else if (type === 'stone') {
+                price = 200;
+                profit = 2000;
+            } else if (type === 'leaf') {
+                price = 300;
+                profit = 3000;
+            }
+
+            if (coins >= price) {
+                coins -= price;
+                profitPerHour += profit;
+                alert(`Вы купили ${type}, теперь ваша прибыль: ${profitPerHour} монет в час!`);
+                updateCoinsDisplay();
+            } else {
+                alert("Недостаточно монет.");
+            }
+        }
+
+        // Начисление монет за прошедшее время, пока игрок отсутствовал
+        function addCoinsForElapsedTime() {
+            const currentTime = Date.now();
+            const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время в секундах
+
+            if (timeElapsed > 0) {
+                const coinsEarned = (profitPerHour / 3600) * timeElapsed;
+                coins += coinsEarned;
+                lastUpdateTime = currentTime;
+                updateCoinsDisplay();
+            }
+        }
+
+        // Выполняется каждую секунду для начисления монет
+        setInterval(addCoinsForElapsedTime, 1000);
+
+        // Переключение экрана
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Генерация пригласительной ссылки
+        function generateInviteLink() {
+            const inviteLink = `https://t.me/PixelClickerGameBot/start?start=${encodeURIComponent(`invite_${Date.now()}`)}`;
+            document.getElementById('invite-link').textContent = inviteLink;
+            document.getElementById('invite-link').setAttribute('href', inviteLink);
+        }
+
+        // Завершение задания по подписке на Telegram
+        function completeTelegramTask() {
+            if (telegramSubscribed) {
+                alert('Вы уже подписаны на Telegram-канал.');
+                return;
+            }
+            // Здесь можно добавить логику проверки подписки через API Telegram
+            telegramSubscribed = true;
+            coins += 1000000; // Присвоение монет за подписку
+            updateCoinsDisplay();
+            alert('Поздравляем! Вы подписались на Telegram-канал и получили 1 000 000 монет!');
+        }
+
+        // Завершение задания по приглашению друга
+        function inviteFriendTask(count) {
+            if (invitedFriends >= count) {
+                coins += (count === 1) ? 5000 : 2000000;
+                alert(`Поздравляем! Вы выполнили задание и получили ${count === 1 ? '5 000' : '2 000 000'} монет!`);
+                invitedFriends -= count;
+                updateCoinsDisplay();
+            } else {
+                alert(`Необходимо пригласить ${count} друзей для выполнения задания.`);
+            }
+        }
+
+        // Обновление статуса выполнения заданий
+        function updateInviteTaskStatus() {
+            document.getElementById('invite-one-reward').style.display = invitedFriends >= 1 ? 'none' : 'block';
+            document.getElementById('invite-five-reward').style.display = invitedFriends >= 5 ? 'none' : 'block';
+        }
+
+        // Инициализация состояния при загрузке
+        updateCoinsDisplay();
+    </script>
 </body>
 </html>
