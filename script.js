@@ -87,7 +87,7 @@ function showScreen(screenId) {
 
 // Генерация ссылки для приглашения друга
 function generateInviteLink() {
-    const inviteLink = `https://t.me/PixelClickerGameBot/start?startapp=${Date.now()}`;
+    const inviteLink = `https://t.me/PixelClickerGameBot?start=${Date.now()}`;
     document.getElementById('invite-link').textContent = inviteLink;
     navigator.clipboard.writeText(inviteLink);
     alert('Ссылка скопирована в буфер обмена!');
@@ -133,9 +133,9 @@ function updateInviteTaskStatus() {
 // Функция для отображения экрана при запуске
 function showScreenOnStart() {
     const urlParams = new URLSearchParams(window.location.search);
-    const startapp = urlParams.get('startapp');
-    if (startapp) {
-        // Можно выполнить действия в зависимости от параметров
+    const userId = urlParams.get('user_id');  // Получение параметра user_id
+    if (userId) {
+        // Можно выполнить действия в зависимости от параметра
         showScreen('exchange'); // Пример: автоматически открыть экран Биржа
     } else {
         showScreen('exchange'); // По умолчанию открываем экран Биржа
