@@ -93,11 +93,11 @@ function showScreen(screenId) {
 
 // Функция генерации пригласительной ссылки через бота
 function generateInviteLink() {
-    const inviteLink = `https://t.me/PixelClickerGameBot?start=${Date.now()}`; // Ссылка для приглашения через бота
-    document.getElementById('invite-link').textContent = inviteLink;
-    navigator.clipboard.writeText(inviteLink)
-        .then(() => alert("Ссылка скопирована в буфер обмена!"))
-        .catch(err => console.error('Ошибка при копировании ссылки:', err));
+    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame`;
+document.getElementById('invite-link').textContent = inviteLink;
+navigator.clipboard.writeText(inviteLink)
+    .then(() => alert("Ссылка скопирована в буфер обмена!"))
+    .catch(err => console.error('Ошибка при копировании ссылки:', err));
 }
 
 // Проверка выполнения задания с подпиской на Telegram
