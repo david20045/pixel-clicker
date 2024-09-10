@@ -93,7 +93,7 @@ function showScreen(screenId) {
 
 // Функция генерации пригласительной ссылки через бота
 function generateInviteLink() {
-    const inviteLink = `https://t.me/YourBotName?start=${Date.now()}`; // Ссылка для приглашения через бота
+    const inviteLink = `https://t.me/PixelClickerGameBot?start=${Date.now()}`; // Ссылка для приглашения через бота
     document.getElementById('invite-link').textContent = inviteLink;
     navigator.clipboard.writeText(inviteLink)
         .then(() => alert("Ссылка скопирована в буфер обмена!"))
