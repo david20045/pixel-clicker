@@ -135,7 +135,7 @@ function showScreen(screenId) {
 // Функция генерации пригласительной ссылки через Local Storage
 function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
-    localStorage.setItem('userId', userId); // Сохранение userId для последующих запросов
+    localStorage.setItem('userId', userId); // Сохранение userId
 
     const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`;
     document.getElementById('invite-link').textContent = inviteLink;
@@ -147,7 +147,8 @@ function generateInviteLink() {
 
 // Проверка выполнения задания с подпиской на Telegram
 function completeTelegramTask() {
-    if (telegramSubscribed && !completedTasks['telegram']) {
+    if (!telegramSubscribed && !completedTasks['telegram']) {
+        telegramSubscribed = true;
         coins += 1000000;
         completedTasks['telegram'] = true;
         alert("Вы получили 1 000 000 монет за подписку!");
@@ -158,36 +159,31 @@ function completeTelegramTask() {
 }
 
 // Функция для начисления награды за приглашение друзей
-function inviteFriendTask(numFriends) {
-    if (numFriends === 1 && !completedTasks['friend1']) {
+function claimFriendReward(numFriends) {
+    if (numFriends === 1 && friendsRegistered >= 1 && !completedTasks['friend1']) {
         coins += 5000;
         completedTasks['friend1'] = true;
         alert("Вы получили 5000 монет за приглашение одного друга!");
-    } else if (numFriends === 5 && !completedTasks['friend5']) {
+        document.getElementById('claim-friend-reward').style.display = 'none';
+    } else if (numFriends === 5 && friendsRegistered >= 5 && !completedTasks['friend5']) {
         coins += 2000000;
         completedTasks['friend5'] = true;
         alert("Вы получили 2 000 000 монет за приглашение пяти друзей!");
-    } else {
-        alert("Задание уже выполнено или недостаточно друзей.");
+        document.getElementById('claim-friends-reward').style.display = 'none';
     }
-
-    invitedFriends += numFriends;
-    friendsRegistered += numFriends;
     updateCoinsDisplay();
 }
 
 // Обновление статуса выполнения заданий по приглашению друзей
 function updateInviteTaskStatus() {
-    document.getElementById('invite-one-reward').style.display = friendsRegistered >= 1 ? 'block' : 'none';
-    document.getElementById('invite-five-reward').style.display = friendsRegistered >= 5 ? 'block' : 'none';
-
-    // Галочки выполнения заданий
-    if (completedTasks['friend1']) {
-        document.getElementById('invite-one-reward').innerHTML = 'Задание выполнено! ✅';
+    if (friendsRegistered >= 1) {
+        document.getElementById('claim-friend-reward').style.display = 'block';
+        document.getElementById('invite-one-status').textContent = 'Можно забрать награду';
     }
-
-    if (completedTasks['friend5']) {
-        document.getElementById('invite-five-reward').innerHTML = 'Задание выполнено! ✅';
+    
+    if (friendsRegistered >= 5) {
+        document.getElementById('claim-friends-reward').style.display = 'block';
+        document.getElementById('invite-five-status').textContent = 'Можно забрать награду';
     }
 }
 
