@@ -223,14 +223,21 @@ function updateCoinsDisplay() {
 // Функция для отображения экрана при запуске
 function showScreenOnStart() {
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('referrer');  // Получение параметра referrer
+    const referrer = urlParams.get('referrer');  // Получение параметра referrer
 
-    if (userId) {
-        const storedUserId = localStorage.getItem('userId');
-        if (storedUserId === userId) {
-            invitedFriends++;
-            friendsRegistered++;
-            updateCoinsDisplay();
+    if (referrer) {
+        let referredBy = localStorage.getItem('referredBy');
+
+        if (!referredBy) {
+            // Засчитываем приглашение только 1 раз
+            localStorage.setItem('referredBy', referrer);
+
+            // Увеличиваем счётчик пригласившего
+            let friendsCount = parseInt(localStorage.getItem(`${referrer}_invitedFriends`)) || 0;
+            friendsCount += 1;
+            localStorage.setItem(`${referrer}_invitedFriends`, friendsCount);
+
+            alert('Вы были приглашены! Дружба засчитана.');
         }
     }
 
