@@ -2,7 +2,7 @@
 <html lang="en">
 </head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Pixel Clicker Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -11,8 +11,15 @@
     <div class="game-container">
         <!-- Экран с тапалкой -->
         <div id="exchange" class="screen active">
+            <h1 class="pixel-text">Биржа</h1>
+
+            <!-- Прогресс-бар для уровней -->
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+                <span id="level-label" class="pixel-text">LVL 1</span> <!-- Текущий уровень -->
+            </div>
+
             <div class="tap-container">
-                <h1 class="pixel-text">Биржа</h1>
                 <div class="tap-info">
                     <img src="https://imageup.ru/img181/4909204/new-piskel-1.png" class="pixel-coin" alt="Coin">
                     <span id="coins" class="pixel-text">Монеты: 0</span>
