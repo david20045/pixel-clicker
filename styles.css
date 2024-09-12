@@ -94,12 +94,13 @@ body {
 
 #level-label {
   position: absolute; /* Абсолютное позиционирование для точного размещения текста */
-  top: -30px; /* Поднятие над прогресс-баром */
+  top: 50%; /* Центрирование по вертикали */
   left: 50%; /* Центрирование по горизонтали */
-  transform: translateX(-50%); /* Центрирование с помощью transform */
+  transform: translate(-50%, -50%); /* Центрирование с помощью transform */
   color: white;
   font-size: 16px;
   text-align: center;
+  white-space: nowrap; /* Чтобы текст не переносился */
 }
 
 /* Flexbox для карточек */
