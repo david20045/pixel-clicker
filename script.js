@@ -2,17 +2,17 @@
 let coins = parseInt(localStorage.getItem('coins')) || 0;
 let profitPerHour = parseInt(localStorage.getItem('profitPerHour')) || 0;
 let lastUpdateTime = parseInt(localStorage.getItem('lastUpdateTime')) || Date.now();
-let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0; // Количество приглашённых друзей
-let friendsRegistered = parseInt(localStorage.getItem('friendsRegistered')) || 0; // Количество зарегистрированных друзей
-let telegramSubscribed = localStorage.getItem('telegramSubscribed') === 'true'; // Проверка подписки на Telegram
-let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || {}; // Выполненные задания
+let invitedFriends = parseInt(localStorage.getItem('invitedFriends')) || 0;
+let friendsRegistered = parseInt(localStorage.getItem('friendsRegistered')) || 0;
+let telegramSubscribed = localStorage.getItem('telegramSubscribed') === 'true';
+let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || {};
 
 // Обновление экрана с монетами
 function updateCoinsDisplay() {
     document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
     document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
     document.getElementById('invited-friends-count').textContent = `Приглашено друзей: ${invitedFriends}`;
-    
+
     // Сохраняем данные
     localStorage.setItem('coins', coins);
     localStorage.setItem('profitPerHour', profitPerHour);
@@ -20,8 +20,9 @@ function updateCoinsDisplay() {
     localStorage.setItem('friendsRegistered', friendsRegistered);
     localStorage.setItem('telegramSubscribed', telegramSubscribed);
     localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-    
-    updateInviteTaskStatus(); // Обновление состояния заданий
+
+    updateInviteTaskStatus();
+    calculateLevelAndProgress();
 }
 
 // Уровни и их требования
@@ -35,7 +36,7 @@ const levels = [
     { level: 7, minCoins: 1000000, maxCoins: 3000000 },
     { level: 8, minCoins: 3000000, maxCoins: 10000000 },
     { level: 9, minCoins: 10000000, maxCoins: 30000000 },
-    { level: 10, minCoins: 30000000, maxCoins: Infinity } // Бесконечный максимум
+    { level: 10, minCoins: 30000000, maxCoins: Infinity }
 ];
 
 // Функция расчета уровня и прогресса
@@ -51,18 +52,8 @@ function calculateLevelAndProgress() {
         }
     }
 
-    // Обновляем прогресс-бар и метку уровня
     document.getElementById('level-label').textContent = `LVL ${currentLevel}`;
     document.getElementById('progress-bar').style.width = `${progress}%`;
-}
-
-// Функция обновления монет и прогресса
-function updateCoinsDisplay() {
-    document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
-    document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
-
-    // Обновляем уровень и прогресс
-    calculateLevelAndProgress();
 }
 
 // Функция нажатия на тапалку
@@ -104,10 +95,10 @@ function buyCard(type) {
     }
 }
 
-// Начисление монет за прошедшее время, пока игрок отсутствовал
+// Начисление монет за прошедшее время
 function addCoinsForElapsedTime() {
     const currentTime = Date.now();
-    const timeElapsed = (currentTime - lastUpdateTime) / 1000; // Время в секундах
+    const timeElapsed = (currentTime - lastUpdateTime) / 1000;
 
     if (timeElapsed > 0) {
         const coinsToAdd = (profitPerHour / 3600) * timeElapsed;
@@ -118,13 +109,13 @@ function addCoinsForElapsedTime() {
     localStorage.setItem('lastUpdateTime', lastUpdateTime);
 }
 
-// Таймер для начисления прибыли каждую секунду
+// Таймер для начисления прибыли
 setInterval(function() {
     coins += profitPerHour / 3600;
     updateCoinsDisplay();
 }, 1000);
 
-// Переключение между экранами
+// Переключение экранов
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -132,10 +123,10 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
 }
 
-// Функция генерации пригласительной ссылки через Local Storage
+// Генерация пригласительной ссылки
 function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
-    localStorage.setItem('userId', userId); // Сохраняем userId
+    localStorage.setItem('userId', userId);
 
     const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`;
     document.getElementById('invite-link').textContent = inviteLink;
@@ -145,7 +136,7 @@ function generateInviteLink() {
         .catch(err => console.error('Ошибка при копировании ссылки:', err));
 }
 
-// Проверка выполнения задания с подпиской на Telegram
+// Проверка задания на подписку
 function completeTelegramTask() {
     if (!completedTasks['telegram']) {
         coins += 1000000;
@@ -180,7 +171,7 @@ function checkReferral() {
     }
 }
 
-// Функция для начисления награды за приглашение друзей
+// Функция начисления награды за приглашение друзей
 function claimFriendReward(numFriends) {
     if (numFriends === 1 && invitedFriends >= 1 && !completedTasks['friend1']) {
         coins += 5000;
@@ -213,26 +204,25 @@ function updateInviteTaskStatus() {
     }
 }
 
-// Функция обновления монет и статуса
+// Функция обновления монет и прогресса
 function updateCoinsDisplay() {
     document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
     updateInviteTaskStatus();
     localStorage.setItem('coins', coins);
+    calculateLevelAndProgress();
 }
 
-// Функция для отображения экрана при запуске
+// Функция отображения экрана при запуске
 function showScreenOnStart() {
     const urlParams = new URLSearchParams(window.location.search);
-    const referrer = urlParams.get('referrer');  // Получение параметра referrer
+    const referrer = urlParams.get('referrer');
 
     if (referrer) {
         let referredBy = localStorage.getItem('referredBy');
 
         if (!referredBy) {
-            // Засчитываем приглашение только 1 раз
             localStorage.setItem('referredBy', referrer);
 
-            // Увеличиваем счётчик пригласившего
             let friendsCount = parseInt(localStorage.getItem(`${referrer}_invitedFriends`)) || 0;
             friendsCount += 1;
             localStorage.setItem(`${referrer}_invitedFriends`, friendsCount);
@@ -244,12 +234,12 @@ function showScreenOnStart() {
     showScreen('exchange'); // По умолчанию открываем экран Биржа
 }
 
-// Инициализация экрана при загрузке страницы
+// Инициализация экрана при загрузке
 window.onload = function() {
     checkReferral(); // Проверяем реферальную ссылку при входе
     addCoinsForElapsedTime();
     updateCoinsDisplay();
-    showScreenOnStart(); // Проверка и отображение нужного экрана при запуске
+    showScreenOnStart();
 }
 
 // Сохранение времени последнего обновления перед закрытием страницы
