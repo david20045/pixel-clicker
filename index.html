@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-</head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Pixel Clicker Game</title>
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- Магазин с карточками -->
+        <!-- Вкладка Магазин -->
         <div id="shop" class="screen">
             <h1 class="pixel-text">Магазин</h1>
             <div class="cards-container">
@@ -64,19 +64,21 @@
                 <div class="card">
                     <p class="pixel-text">Подпишитесь на наш Telegram-канал и получите 1 000 000 монет!</p>
                     <a href="https://t.me/PixelClickerGame" target="_blank" class="pixel-text">Перейти в Telegram</a>
-                    <button onclick="completeTelegramTask()" class="pixel-text">Выполнить</button>
+                    <button onclick="completeTelegramTask()" class="pixel-text">Проверить подписку</button>
                 </div>
 
                 <!-- Карточка: Пригласить друга -->
                 <div class="card">
                     <p class="pixel-text">Пригласите одного друга и получите 5000 монет</p>
-                    <button onclick="inviteFriendTask(1)" class="pixel-text">Пригласить друга</button>
+                    <button id="claim-friend-reward" onclick="claimFriendReward(1)" class="pixel-text" style="display: none;">Забрать награду</button>
+                    <p id="invite-one-status" class="pixel-text">Нужно пригласить друга</p>
                 </div>
 
                 <!-- Карточка: Пригласить 5 друзей -->
                 <div class="card">
                     <p class="pixel-text">Пригласите 5 друзей и получите 2 000 000 монет</p>
-                    <button onclick="inviteFriendTask(5)" class="pixel-text">Пригласить 5 друзей</button>
+                    <button id="claim-friends-reward" onclick="claimFriendReward(5)" class="pixel-text" style="display: none;">Забрать награду</button>
+                    <p id="invite-five-status" class="pixel-text">Нужно пригласить 5 друзей</p>
                 </div>
             </div>
         </div>
@@ -90,18 +92,7 @@
                     <p class="pixel-text">Пригласите друзей по ссылке и получите монеты!</p>
                     <button onclick="generateInviteLink()" class="pixel-text">Создать пригласительную ссылку</button>
                     <p id="invite-link" class="pixel-text"></p> <!-- Здесь будет показана ссылка -->
-                </div>
-
-                <!-- Карточка: Пригласить одного друга -->
-                <div class="card">
-                    <p class="pixel-text">Пригласите одного друга и получите 5000 монет</p>
-                    <button onclick="inviteFriendTask(1)" class="pixel-text">Пригласить друга</button>
-                </div>
-
-                <!-- Карточка: Пригласить 5 друзей -->
-                <div class="card">
-                    <p class="pixel-text">Пригласите 5 друзей и получите 2 000 000 монет</p>
-                    <button onclick="inviteFriendTask(5)" class="pixel-text">Пригласить 5 друзей</button>
+                    <p id="invited-friends-count" class="pixel-text">Приглашено друзей: 0</p> <!-- Счётчик друзей -->
                 </div>
             </div>
         </div>
