@@ -22,7 +22,6 @@ function updateCoinsDisplay() {
     localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
     
     updateInviteTaskStatus(); // Обновление состояния заданий
-    updateLevelProgress(); // Обновление прогресса уровня
 }
 
 // Уровни и их требования
@@ -249,5 +248,4 @@ window.onload = function() {
 window.onbeforeunload = function() {
     localStorage.setItem('lastUpdateTime', Date.now());
 };
-
 
