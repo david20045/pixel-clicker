@@ -132,53 +132,29 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
 }
 
-// Функция генерации пригласительной ссылки через бота
+// Функция генерации пригласительной ссылки через Local Storage
 function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
     localStorage.setItem('userId', userId); // Сохранение userId для последующих запросов
 
-    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/generate-invite', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const inviteLink = data.inviteLink;
-        document.getElementById('invite-link').textContent = inviteLink;
-        document.getElementById('invite-link').style.wordWrap = 'break-word';
-        navigator.clipboard.writeText(inviteLink)
-            .then(() => alert("Ссылка скопирована в буфер обмена!"))
-            .catch(err => console.error('Ошибка при копировании ссылки:', err));
-    })
-    .catch(error => console.error('Ошибка при генерации ссылки:', error));
+    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`;
+    document.getElementById('invite-link').textContent = inviteLink;
+    document.getElementById('invite-link').style.wordWrap = 'break-word';
+    navigator.clipboard.writeText(inviteLink)
+        .then(() => alert("Ссылка скопирована в буфер обмена!"))
+        .catch(err => console.error('Ошибка при копировании ссылки:', err));
 }
 
 // Проверка выполнения задания с подпиской на Telegram
 function completeTelegramTask() {
-    const userId = localStorage.getItem('userId') || Date.now().toString();
-
-    fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/check-subscription', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.subscribed && !completedTasks['telegram']) {
-            coins += 1000000;
-            completedTasks['telegram'] = true;
-            alert("Вы получили 1 000 000 монет за подписку!");
-            updateCoinsDisplay();
-        } else {
-            alert("Задание уже выполнено или вы не подписаны.");
-        }
-    })
-    .catch(error => console.error('Ошибка при проверке подписки:', error));
+    if (telegramSubscribed && !completedTasks['telegram']) {
+        coins += 1000000;
+        completedTasks['telegram'] = true;
+        alert("Вы получили 1 000 000 монет за подписку!");
+        updateCoinsDisplay();
+    } else {
+        alert("Задание уже выполнено или вы не подписаны.");
+    }
 }
 
 // Функция для начисления награды за приглашение друзей
@@ -219,25 +195,16 @@ function updateInviteTaskStatus() {
 function showScreenOnStart() {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('referrer');  // Получение параметра referrer
+
     if (userId) {
-        // Можно выполнить действия в зависимости от параметра
-        fetch('https://powerful-shore-09376-21d10976fcd9.herokuapp.com/register-friend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ inviteCode: urlParams.get('start'), referrer: userId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Приглашение успешно зарегистрировано!");
-                friendsRegistered++;
-                updateInviteTaskStatus();
-            }
-        })
-        .catch(error => console.error('Ошибка при регистрации приглашения:', error));
+        const storedUserId = localStorage.getItem('userId');
+        if (storedUserId === userId) {
+            invitedFriends++;
+            friendsRegistered++;
+            updateCoinsDisplay();
+        }
     }
+
     showScreen('exchange'); // По умолчанию открываем экран Биржа
 }
 
@@ -252,4 +219,3 @@ window.onload = function() {
 window.onbeforeunload = function() {
     localStorage.setItem('lastUpdateTime', Date.now());
 };
-
