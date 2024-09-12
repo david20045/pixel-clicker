@@ -67,7 +67,7 @@ function updateCoinsDisplay() {
 
 // Функция нажатия на тапалку
 function tap() {
-    coins += 1;
+    coins += 2;
     animateTap();
     updateCoinsDisplay();
 }
