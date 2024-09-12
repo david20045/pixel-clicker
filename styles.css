@@ -1,6 +1,6 @@
 /* Основные стили */
 body {
-  font-family: 'Press Start 2P', cursive; /* Шрифт в стиле пиксельных игр */
+  font-family: 'Press Start 2P', cursive;
   background-color: #222;
   color: white;
   margin: 0;
@@ -95,10 +95,10 @@ body {
 }
 
 #level-label {
-  position: absolute; /* Абсолютное позиционирование для точного размещения текста */
-  top: 50%; /* Центрирование по вертикали */
-  left: 50%; /* Центрирование по горизонтали */
-  transform: translate(-50%, -50%); /* Центрирование с помощью transform */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: white;
   font-size: 16px;
   text-align: center;
@@ -141,38 +141,38 @@ body {
 
 .nav-bar button {
   font-size: 10px; /* Уменьшаем размер шрифта для кнопок */
-  padding: 6px 8px; /* Уменьшаем padding, чтобы кнопки не выходили за рамки */
+  padding: 6px 8px;
   cursor: pointer;
   background-color: #555;
   border: none;
   border-radius: 5px;
   color: white;
   flex: 1; /* Равномерно распределяем кнопки */
-  margin: 0 4px; /* Устанавливаем минимальные отступы между кнопками */
+  margin: 0 4px;
   max-width: 90px; /* Ограничиваем максимальную ширину кнопок */
 }
 
 /* Адаптивное поведение для мобильных устройств */
 @media (max-width: 600px) {
   .nav-bar button {
-    font-size: 8px; /* Уменьшаем шрифт для мобильных устройств */
-    padding: 5px 6px; /* Уменьшаем padding */
+    font-size: 8px;
+    padding: 5px 6px;
   }
 }
 
 /* Стили для генерации ссылки */
 #invite-link {
-  word-wrap: break-word; /* Длинная ссылка переносится на следующую строку */
-  white-space: normal; /* Разрешаем перенос по строкам */
-  max-width: 100%; /* Ссылка не выходит за рамки карточки */
-  overflow-wrap: break-word; /* Переносим длинные слова */
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 /* Стили для вкладки "Задания" */
 #tasks .card a {
   display: block;
-  color: #4e76a4; /* Более приятный и менее яркий синий цвет */
-  margin-top: 10px; /* Добавляем отступ между ссылкой и кнопкой */
+  color: #4e76a4; /* Более приятный синий цвет */
+  margin-top: 10px;
   text-decoration: none; /* Убираем подчеркивание у ссылки */
   font-size: 12px;
 }
@@ -182,5 +182,5 @@ body {
 }
 
 #tasks .card button {
-  margin-top: 15px; /* Увеличиваем отступ между кнопкой и текстом */
+  margin-top: 15px; /* Отступ между кнопкой и текстом */
 }
