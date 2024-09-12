@@ -31,7 +31,11 @@ const levels = [
     { level: 3, minCoins: 50000, maxCoins: 100000 },
     { level: 4, minCoins: 100000, maxCoins: 200000 },
     { level: 5, minCoins: 200000, maxCoins: 500000 },
-    { level: 6, minCoins: 500000, maxCoins: Infinity } // Бесконечный максимум
+    { level: 6, minCoins: 500000, maxCoins: 1000000 },
+    { level: 7, minCoins: 1000000, maxCoins: 3000000 },
+    { level: 8, minCoins: 3000000, maxCoins: 10000000 },
+    { level: 9, minCoins: 10000000, maxCoins: 30000000 },
+    { level: 10, minCoins: 30000000, maxCoins: Infinity } // Бесконечный максимум
 ];
 
 // Функция расчета уровня и прогресса
