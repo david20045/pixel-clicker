@@ -27,17 +27,17 @@ function updateCoinsDisplay() {
 
 // Уровни и их требования
 const levels = [
-  { level: 1, minCoins: 0, maxCoins: 20000 },
-  { level: 2, minCoins: 20000, maxCoins: 50000 },
-  { level: 3, minCoins: 50000, maxCoins: 100000 },
-  { level: 4, minCoins: 100000, maxCoins: 200000 },
-  { level: 5, minCoins: 200000, maxCoins: 500000 },
-  { level: 6, minCoins: 500000, maxCoins: Infinity } // Бесконечный максимум
+    { level: 1, minCoins: 0, maxCoins: 20000 },
+    { level: 2, minCoins: 20000, maxCoins: 50000 },
+    { level: 3, minCoins: 50000, maxCoins: 100000 },
+    { level: 4, minCoins: 100000, maxCoins: 200000 },
+    { level: 5, minCoins: 200000, maxCoins: 500000 },
+    { level: 6, minCoins: 500000, maxCoins: Infinity } // Бесконечный максимум
 ];
 
-// Функция расчета текущего уровня и прогресса
+// Функция расчета уровня и прогресса
 function calculateLevelAndProgress() {
-    let currentLevel = levels[0].level;
+    let currentLevel = 1;
     let progress = 0;
 
     for (const level of levels) {
@@ -53,21 +53,13 @@ function calculateLevelAndProgress() {
     document.getElementById('progress-bar').style.width = `${progress}%`;
 }
 
-// Обновление экрана с монетами
+// Функция обновления монет и прогресса
 function updateCoinsDisplay() {
     document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
     document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
-    document.getElementById('invited-friends-count').textContent = `Приглашено друзей: ${invitedFriends}`;
 
-    // Сохраняем данные
-    localStorage.setItem('coins', coins);
-    localStorage.setItem('profitPerHour', profitPerHour);
-    localStorage.setItem('invitedFriends', invitedFriends);
-    localStorage.setItem('friendsRegistered', friendsRegistered);
-    localStorage.setItem('telegramSubscribed', telegramSubscribed);
-    localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-    
-    calculateLevelAndProgress(); // Обновляем уровень и прогресс
+    // Обновляем уровень и прогресс
+    calculateLevelAndProgress();
 }
 
 // Функция нажатия на тапалку
@@ -257,3 +249,5 @@ window.onload = function() {
 window.onbeforeunload = function() {
     localStorage.setItem('lastUpdateTime', Date.now());
 };
+
+
