@@ -137,7 +137,7 @@ function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString(); // Генерируем ID, если его нет
     localStorage.setItem('userId', userId); // Сохраняем userId в localStorage
 
-    const inviteLink = `https://your-game-url.com?referrer=${userId}`; // Ссылка с параметром реферального ID
+    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`; // Ссылка с параметром реферального ID
     document.getElementById('invite-link').textContent = inviteLink; // Показываем ссылку на экране
     navigator.clipboard.writeText(inviteLink)
         .then(() => alert("Ссылка скопирована в буфер обмена!"))
