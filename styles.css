@@ -76,11 +76,12 @@ body {
 
 /* Прогресс-бар для уровней */
 .progress-container {
-  width: 100%;
+  width: 80%; /* Ширина прогресс-бара */
   background-color: #444; /* Цвет фона */
   border-radius: 5px;
-  margin-bottom: 20px;
+  margin: 20px auto; /* Отступ сверху и снизу, по центру */
   height: 20px;
+  position: relative; /* Относительное позиционирование для корректной работы с текстом уровня */
 }
 
 .progress-bar {
@@ -92,8 +93,10 @@ body {
 }
 
 #level-label {
-  position: relative;
-  top: -30px; /* Положение текста над прогресс-баром */
+  position: absolute; /* Абсолютное позиционирование для точного размещения текста */
+  top: -30px; /* Поднятие над прогресс-баром */
+  left: 50%; /* Центрирование по горизонтали */
+  transform: translateX(-50%); /* Центрирование с помощью transform */
   color: white;
   font-size: 16px;
   text-align: center;
