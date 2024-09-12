@@ -74,6 +74,34 @@ body {
   font-size: 12px;
 }
 
+/* Прогресс-бар */
+.progress-container {
+  width: 80%;
+  height: 25px;
+  background-color: #333;
+  border: 2px solid white;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4CAF50; /* Зеленая полоса */
+  width: 0;
+  border-radius: 5px;
+  transition: width 0.5s ease; /* Анимация прогресса */
+}
+
+#level-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: white;
+}
+
 /* Flexbox для карточек */
 .cards-container {
   display: flex;
