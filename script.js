@@ -135,7 +135,7 @@ function showScreen(screenId) {
 // Функция генерации пригласительной ссылки через Local Storage
 function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
-    localStorage.setItem('userId', userId); // Сохранение userId
+    localStorage.setItem('userId', userId); // Сохраняем userId
 
     const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`;
     document.getElementById('invite-link').textContent = inviteLink;
@@ -184,6 +184,44 @@ function updateInviteTaskStatus() {
     if (friendsRegistered >= 5) {
         document.getElementById('claim-friends-reward').style.display = 'block';
         document.getElementById('invite-five-status').textContent = 'Можно забрать награду';
+    }
+}
+
+// Функция для проверки и учёта приглашения при заходе друга на сайт
+function checkReferral() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrer = urlParams.get('referrer'); // Получаем параметр referrer из URL
+
+    if (referrer) {
+        let referredBy = localStorage.getItem('referredBy');
+
+        // Если друг ещё не был зарегистрирован как приглашённый
+        if (!referredBy) {
+            localStorage.setItem('referredBy', referrer);
+
+            // Увеличиваем счётчик приглашённых у пригласившего
+            fetch(`https://your-backend-api/invite`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ referrer }) // Передаём ID пригласившего
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Обновляем счётчик у пригласившего
+                    invitedFriends++;
+                    friendsRegistered++;
+                    alert('Приглашение успешно засчитано!');
+                    updateInviteTaskStatus();
+                    updateCoinsDisplay();
+                } else {
+                    console.error('Ошибка засчёта приглашения');
+                }
+            })
+            .catch(error => console.error('Ошибка обработки приглашения:', error));
+        }
     }
 }
 
