@@ -25,37 +25,49 @@ function updateCoinsDisplay() {
     updateLevelProgress(); // Обновление прогресса уровня
 }
 
-// Обновление уровня и прогресс-бара
-function updateLevelProgress() {
-    let level = 1;
-    let maxCoins = 20000; // Максимум для первого уровня
-    let nextLevelCoins = 0;
+// Уровни и их требования
+const levels = [
+  { level: 1, minCoins: 0, maxCoins: 20000 },
+  { level: 2, minCoins: 20000, maxCoins: 50000 },
+  { level: 3, minCoins: 50000, maxCoins: 100000 },
+  { level: 4, minCoins: 100000, maxCoins: 200000 },
+  { level: 5, minCoins: 200000, maxCoins: 500000 },
+  { level: 6, minCoins: 500000, maxCoins: Infinity } // Бесконечный максимум
+];
 
-    if (coins >= 20000 && coins < 50000) {
-        level = 2;
-        maxCoins = 50000;
-        nextLevelCoins = 20000;
-    } else if (coins >= 50000 && coins < 100000) {
-        level = 3;
-        maxCoins = 100000;
-        nextLevelCoins = 50000;
-    } else if (coins >= 100000 && coins < 200000) {
-        level = 4;
-        maxCoins = 200000;
-        nextLevelCoins = 100000;
-    } else if (coins >= 200000) {
-        level = 5;
-        maxCoins = 500000;
-        nextLevelCoins = 200000;
+// Функция расчета текущего уровня и прогресса
+function calculateLevelAndProgress() {
+    let currentLevel = levels[0].level;
+    let progress = 0;
+
+    for (const level of levels) {
+        if (coins >= level.minCoins && coins < level.maxCoins) {
+            currentLevel = level.level;
+            progress = ((coins - level.minCoins) / (level.maxCoins - level.minCoins)) * 100;
+            break;
+        }
     }
 
-    // Обновляем прогресс бар
-    const progressBar = document.getElementById('progress-bar');
-    const progressPercent = ((coins - nextLevelCoins) / (maxCoins - nextLevelCoins)) * 100;
-    progressBar.style.width = progressPercent + '%';
+    // Обновляем прогресс-бар и метку уровня
+    document.getElementById('level-label').textContent = `LVL ${currentLevel}`;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+}
 
-    // Обновляем текст с текущим уровнем
-    document.getElementById('level-label').textContent = `LVL ${level}`;
+// Обновление экрана с монетами
+function updateCoinsDisplay() {
+    document.getElementById('coins').textContent = `Монеты: ${Math.floor(coins)}`;
+    document.getElementById('profit-per-hour').textContent = `Прибыль в час: ${profitPerHour}`;
+    document.getElementById('invited-friends-count').textContent = `Приглашено друзей: ${invitedFriends}`;
+
+    // Сохраняем данные
+    localStorage.setItem('coins', coins);
+    localStorage.setItem('profitPerHour', profitPerHour);
+    localStorage.setItem('invitedFriends', invitedFriends);
+    localStorage.setItem('friendsRegistered', friendsRegistered);
+    localStorage.setItem('telegramSubscribed', telegramSubscribed);
+    localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+    
+    calculateLevelAndProgress(); // Обновляем уровень и прогресс
 }
 
 // Функция нажатия на тапалку
