@@ -22,6 +22,40 @@ function updateCoinsDisplay() {
     localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
     
     updateInviteTaskStatus(); // Обновление состояния заданий
+    updateLevelProgress(); // Обновление прогресса уровня
+}
+
+// Обновление уровня и прогресс-бара
+function updateLevelProgress() {
+    let level = 1;
+    let maxCoins = 20000; // Максимум для первого уровня
+    let nextLevelCoins = 0;
+
+    if (coins >= 20000 && coins < 50000) {
+        level = 2;
+        maxCoins = 50000;
+        nextLevelCoins = 20000;
+    } else if (coins >= 50000 && coins < 100000) {
+        level = 3;
+        maxCoins = 100000;
+        nextLevelCoins = 50000;
+    } else if (coins >= 100000 && coins < 200000) {
+        level = 4;
+        maxCoins = 200000;
+        nextLevelCoins = 100000;
+    } else if (coins >= 200000) {
+        level = 5;
+        maxCoins = 500000;
+        nextLevelCoins = 200000;
+    }
+
+    // Обновляем прогресс бар
+    const progressBar = document.getElementById('progress-bar');
+    const progressPercent = ((coins - nextLevelCoins) / (maxCoins - nextLevelCoins)) * 100;
+    progressBar.style.width = progressPercent + '%';
+
+    // Обновляем текст с текущим уровнем
+    document.getElementById('level-label').textContent = `LVL ${level}`;
 }
 
 // Функция нажатия на тапалку
