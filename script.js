@@ -134,57 +134,14 @@ function showScreen(screenId) {
 
 // Функция генерации пригласительной ссылки через Local Storage
 function generateInviteLink() {
-    const userId = localStorage.getItem('userId') || Date.now().toString();
-    localStorage.setItem('userId', userId); // Сохраняем userId
+    const userId = localStorage.getItem('userId') || Date.now().toString(); // Генерируем ID, если его нет
+    localStorage.setItem('userId', userId); // Сохраняем userId в localStorage
 
-    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`;
-    document.getElementById('invite-link').textContent = inviteLink;
-    document.getElementById('invite-link').style.wordWrap = 'break-word';
+    const inviteLink = `https://your-game-url.com?referrer=${userId}`; // Ссылка с параметром реферального ID
+    document.getElementById('invite-link').textContent = inviteLink; // Показываем ссылку на экране
     navigator.clipboard.writeText(inviteLink)
         .then(() => alert("Ссылка скопирована в буфер обмена!"))
         .catch(err => console.error('Ошибка при копировании ссылки:', err));
-}
-
-// Проверка выполнения задания с подпиской на Telegram
-function completeTelegramTask() {
-    if (!telegramSubscribed && !completedTasks['telegram']) {
-        telegramSubscribed = true;
-        coins += 1000000;
-        completedTasks['telegram'] = true;
-        alert("Вы получили 1 000 000 монет за подписку!");
-        updateCoinsDisplay();
-    } else {
-        alert("Задание уже выполнено или вы не подписаны.");
-    }
-}
-
-// Функция для начисления награды за приглашение друзей
-function claimFriendReward(numFriends) {
-    if (numFriends === 1 && friendsRegistered >= 1 && !completedTasks['friend1']) {
-        coins += 5000;
-        completedTasks['friend1'] = true;
-        alert("Вы получили 5000 монет за приглашение одного друга!");
-        document.getElementById('claim-friend-reward').style.display = 'none';
-    } else if (numFriends === 5 && friendsRegistered >= 5 && !completedTasks['friend5']) {
-        coins += 2000000;
-        completedTasks['friend5'] = true;
-        alert("Вы получили 2 000 000 монет за приглашение пяти друзей!");
-        document.getElementById('claim-friends-reward').style.display = 'none';
-    }
-    updateCoinsDisplay();
-}
-
-// Обновление статуса выполнения заданий по приглашению друзей
-function updateInviteTaskStatus() {
-    if (friendsRegistered >= 1) {
-        document.getElementById('claim-friend-reward').style.display = 'block';
-        document.getElementById('invite-one-status').textContent = 'Можно забрать награду';
-    }
-    
-    if (friendsRegistered >= 5) {
-        document.getElementById('claim-friends-reward').style.display = 'block';
-        document.getElementById('invite-five-status').textContent = 'Можно забрать награду';
-    }
 }
 
 // Функция для проверки и учёта приглашения при заходе друга на сайт
@@ -193,35 +150,39 @@ function checkReferral() {
     const referrer = urlParams.get('referrer'); // Получаем параметр referrer из URL
 
     if (referrer) {
+        // Проверяем, был ли текущий пользователь уже приглашён
         let referredBy = localStorage.getItem('referredBy');
 
-        // Если друг ещё не был зарегистрирован как приглашённый
         if (!referredBy) {
+            // Сохраняем, что текущий пользователь был приглашён
             localStorage.setItem('referredBy', referrer);
 
-            // Увеличиваем счётчик приглашённых у пригласившего
-            fetch(`https://your-backend-api/invite`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ referrer }) // Передаём ID пригласившего
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Обновляем счётчик у пригласившего
-                    invitedFriends++;
-                    friendsRegistered++;
-                    alert('Приглашение успешно засчитано!');
-                    updateInviteTaskStatus();
-                    updateCoinsDisplay();
-                } else {
-                    console.error('Ошибка засчёта приглашения');
-                }
-            })
-            .catch(error => console.error('Ошибка обработки приглашения:', error));
+            // Увеличиваем счётчик приглашённых у пригласившего пользователя
+            let invitedFriends = parseInt(localStorage.getItem(`invitedFriends_${referrer}`)) || 0;
+            invitedFriends += 1;
+            localStorage.setItem(`invitedFriends_${referrer}`, invitedFriends); // Обновляем счётчик у пригласившего
+
+            alert('Приглашение успешно засчитано!');
+        } else {
+            alert('Вы уже были приглашены ранее!');
         }
+    }
+}
+
+// Обновление статуса выполнения заданий по приглашению друзей
+function updateInviteTaskStatus() {
+    const userId = localStorage.getItem('userId');
+    const invitedFriends = parseInt(localStorage.getItem(`invitedFriends_${userId}`)) || 0; // Получаем количество приглашённых друзей
+
+    // Показываем статус выполнения заданий
+    if (invitedFriends >= 1) {
+        document.getElementById('claim-friend-reward').style.display = 'block';
+        document.getElementById('invite-one-status').textContent = 'Можно забрать награду';
+    }
+    
+    if (invitedFriends >= 5) {
+        document.getElementById('claim-friends-reward').style.display = 'block';
+        document.getElementById('invite-five-status').textContent = 'Можно забрать награду';
     }
 }
 
