@@ -128,7 +128,7 @@ function generateInviteLink() {
     const userId = localStorage.getItem('userId') || Date.now().toString();
     localStorage.setItem('userId', userId);
 
-    const inviteLink = `https://t.me/PixelClickerGameBot/PixelClickerGame?referrer=${userId}`;
+    const inviteLink = `https://t.me/PixelClickerGameBot?start=${userId}`;
     document.getElementById('invite-link').textContent = inviteLink;
     document.getElementById('invite-link').style.wordWrap = 'break-word';
     navigator.clipboard.writeText(inviteLink)
@@ -152,12 +152,11 @@ function completeTelegramTask() {
 // Учёт приглашений при заходе друга на сайт
 function checkReferral() {
     const urlParams = new URLSearchParams(window.location.search);
-    const referrer = urlParams.get('referrer');
+    const referrer = urlParams.get('start');
 
     if (referrer) {
         let referredBy = localStorage.getItem('referredBy');
 
-        // Если друг ещё не был зарегистрирован как приглашённый
         if (!referredBy) {
             localStorage.setItem('referredBy', referrer);
             
@@ -207,40 +206,27 @@ function updateInviteTaskStatus() {
     }
 }
 
-// Функция отображения экрана при запуске
-function showScreenOnStart() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const referrer = urlParams.get('referrer');
-
-    if (referrer) {
-        let referredBy = localStorage.getItem('referredBy');
-
-        if (!referredBy) {
-            localStorage.setItem('referredBy', referrer);
-
-            let friendsCount = parseInt(localStorage.getItem(`${referrer}_invitedFriends`)) || 0;
-            friendsCount += 1;
-            localStorage.setItem(`${referrer}_invitedFriends`, friendsCount);
-
-            invitedFriends += 1;
-            localStorage.setItem('invitedFriends', invitedFriends);
-
-            alert('Вы были приглашены! Дружба засчитана.');
-        }
+// Проверка подписки на Telegram-канал
+function checkTelegramSubscription() {
+    if (telegramSubscribed) {
+        alert("Подписка на канал уже подтверждена.");
+    } else {
+        alert("Пожалуйста, подпишитесь на канал и нажмите 'Проверить'.");
     }
-
-    showScreen('exchange'); // По умолчанию открываем экран Биржа
 }
 
-// Инициализация экрана при загрузке
-window.onload = function() {
-    checkReferral(); // Проверяем реферальную ссылку при входе
-    addCoinsForElapsedTime();
+// Вызов функции при загрузке страницы
+window.onload = () => {
     updateCoinsDisplay();
-    showScreenOnStart();
-}
-
-// Сохранение времени последнего обновления перед закрытием страницы
-window.onbeforeunload = function() {
-    localStorage.setItem('lastUpdateTime', Date.now());
+    checkReferral();
 };
+
+document.getElementById('tap-btn').addEventListener('click', tap);
+document.getElementById('buy-tree').addEventListener('click', () => buyCard('tree'));
+document.getElementById('buy-stone').addEventListener('click', () => buyCard('stone'));
+document.getElementById('buy-leaf').addEventListener('click', () => buyCard('leaf'));
+document.getElementById('generate-link').addEventListener('click', generateInviteLink);
+document.getElementById('check-telegram').addEventListener('click', checkTelegramSubscription);
+document.getElementById('claim-friend-reward').addEventListener('click', () => claimFriendReward(1));
+document.getElementById('claim-friends-reward').addEventListener('click', () => claimFriendReward(5));
+
