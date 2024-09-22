@@ -131,7 +131,7 @@ body {
 
 /* Обновление навигационной панели для адаптивности */
 .nav-bar {
-  border-bottom: 2px solid white;
+  border-top: 2px solid white;
   display: flex;
   justify-content: space-around;
   width: 100%;
