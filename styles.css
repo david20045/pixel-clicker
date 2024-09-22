@@ -135,7 +135,7 @@ body {
   justify-content: space-around;
   width: 100%;
   padding: 15px 0; /* Увеличиваем высоту панели */
-  background-color: #444;
+  background-color: #0e0e0e;
   height: 40px; /* Увеличиваем высоту панели */
 }
 
